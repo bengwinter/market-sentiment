@@ -1,3 +1,4 @@
+ruby '2.0.0'
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -20,6 +21,8 @@ gem 'sentimental', github: '7compass/sentimental'
 
 # dotenv for environment configuration
 gem 'dotenv-rails'
+
+gem 'rails_12factor'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
