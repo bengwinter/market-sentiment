@@ -1,0 +1,22 @@
+<table border="1">
+<tr>
+<th>Date</th>
+<th>DJIA Day Change</th>
+<th>S&P Day Change</th>
+<th>Twitter Sentiment Score</th>
+<th>Media Sentiment Score</th>
+<th>Investor Sentiment Score</th>
+</tr>
+
+<% @financial_history_data.each do |entry| %>
+<tr>
+<td><%= entry.date.to_s %></td>
+<td><%= entry.djia_delta.to_s %></td>
+<td><%= entry.sp_delta.to_s %></td>
+<td><%= entry.twitter_score.to_s %></td>
+<td><%= entry.media_score.to_s %></td>
+<td><%= entry.investor_score.to_s %></td>
+</tr>
+<% end %>
+
+</table>
