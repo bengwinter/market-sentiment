@@ -18,6 +18,9 @@ gem 'mccandlish'
 #sentimental for text sentiment analysis
 gem 'sentimental', github: '7compass/sentimental'
 
+# dotenv for environment configuration
+gem 'dotenv-rails'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
