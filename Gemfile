@@ -6,6 +6,18 @@ gem 'rails', '4.0.0'
 # Use postgresql as the database for Active Record
 gem 'pg'
 
+# pry for debugging
+gem 'pry-rails'
+
+# yahoo-finance for financial data
+gem 'yahoo-finance'
+
+# mccandlish to access nytimes data
+gem 'mccandlish'
+
+#sentimental for text sentiment analysis
+gem 'sentimental', github: '7compass/sentimental'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
