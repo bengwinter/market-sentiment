@@ -11,15 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131020163414) do
+ActiveRecord::Schema.define(version: 20131021212928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "financial_history_data", force: true do |t|
     t.date     "date"
-    t.decimal  "djia_delta"
-    t.decimal  "sp_delta"
+    t.decimal  "dia_last"
+    t.decimal  "spy_last"
     t.decimal  "twitter_score"
     t.decimal  "media_score"
     t.decimal  "investor_score"

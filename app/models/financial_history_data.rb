@@ -40,13 +40,11 @@ class FinancialHistoryData < ActiveRecord::Base
 
 
 	def self.fetch_financial_data(ticker)
-		quotes = YahooFinance.quotes([ticker], [:previous_close, :close], {raw: false})
+		quotes = YahooFinance.quotes([ticker], [:last_trade_price], {raw: false})
 		quotes.each do |quote|
-			@previous_close = quote.previous_close.to_f
-			@close = quote.close.to_f
-			@change = (((@close - @previous_close) / @previous_close) * 100).round(3)
+			@last_trade_price = quote.last_trade_price.to_f.round(3)
 		end
-		return @change
+		return @last_trade_price
 	end
 
 
@@ -98,7 +96,7 @@ class FinancialHistoryData < ActiveRecord::Base
 
 	def self.update_database
 		nyt_sentiment = fetch_nyt_sentiment.to_f
-		self.create(date: Date.today.to_s, djia_delta: fetch_financial_data('DIA'), sp_delta: fetch_financial_data('SPY'), twitter_score: 0.95, media_score: nyt_sentiment, investor_score: fetch_sa_sentiment)
+		self.create(date: DateTime.now, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: 0.95, media_score: nyt_sentiment, investor_score: fetch_sa_sentiment)
 	end
 
 end
