@@ -59,7 +59,7 @@ class FinancialHistoryData < ActiveRecord::Base
 
 
 	def update_database
-		FinancialHistoryData.create(date: Date.today, djia_delta: fetch_financial_data('DIA'), sp_delta: fetch_financial_data('SPY'), twitter_score: 0.95, media_score: fetch_nyt_sentiment, investor_score: 1.2)
+		FinancialHistoryData.create(date: Date.today, djia_delta: fetch_financial_data('DIA'), sp_delta: fetch_financial_data('SPY'), twitter_score: 0.95, media_score: fetch_nyt_sentiment.to_f, investor_score: 1.2)
 	end
 
 end
