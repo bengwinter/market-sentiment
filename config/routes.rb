@@ -3,8 +3,7 @@ MarketSentimentAnalysis::Application.routes.draw do
   root 'financial_history_data#index'
 
   get 'financial_history_data/index' => 'financial_history_data#index'
-  # get 'financial_history_data/create' => 'financial_history_data#create'
-
+  get 'financial_history_data/update' => 'financial_history_data#update'
 
 
   # The priority is based upon order of creation: first created -> highest priority.

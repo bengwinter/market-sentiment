@@ -1,5 +1,4 @@
 require 'yahoo_finance'
-require 'pry'
 
 class FinancialHistoryData < ActiveRecord::Base
 
