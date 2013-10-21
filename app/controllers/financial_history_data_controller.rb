@@ -3,7 +3,10 @@ class FinancialHistoryDataController < ApplicationController
 
   # GET /financial_history_data
   def index
+    @data_new = FinancialHistoryData.new
     @financial_history_data = FinancialHistoryData.all
+    # @nyt_sentiment = @data_new.fetch_nyt_sentiment
+    @data_new.update_database
   end
 
   # # GET /financial_history_data/1
