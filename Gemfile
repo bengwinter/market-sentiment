@@ -10,8 +10,8 @@ gem 'pg'
 # pry for debugging
 gem 'pry-rails'
 
-# crack for JSON and XML parsing
-gem 'crack'
+# require json for JSON parsing 
+gem 'json'
 
 # yahoo-finance for financial data
 gem 'yahoo-finance'

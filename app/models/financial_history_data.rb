@@ -9,7 +9,7 @@ class FinancialHistoryData < ActiveRecord::Base
 
 		link = URI(link_raw)
 		json = Net::HTTP.get(link)
-		json_crack = Crack::JSON.parse(json)
+		json_crack = JSON.parse(json)
 		articles = json_crack["response"]["docs"]
 
 		article_text = []

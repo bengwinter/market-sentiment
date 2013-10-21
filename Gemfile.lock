@@ -150,6 +150,7 @@ DEPENDENCIES
   dotenv-rails
   jbuilder (~> 1.2)
   jquery-rails
+  json
   mccandlish
   pg
   pry-rails
