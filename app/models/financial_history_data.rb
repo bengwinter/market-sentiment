@@ -2,7 +2,8 @@ require 'yahoo_finance'
 
 class FinancialHistoryData < ActiveRecord::Base
 
-	def fetch_nyt_news
+	def self.fetch_nyt_news
+
 		date = Date.today.to_s.split(/-/).join
 
 		link_raw = 	"http://api.nytimes.com/svc/search/v2/articlesearch.json?fq=news_desk:(%22Business%22)&begin_date=" + date + "&end_date=" + date + "&api-key=dd560fd468731923ee6fcb7f2213540b:3:6136857"
@@ -23,7 +24,7 @@ class FinancialHistoryData < ActiveRecord::Base
 	end
 
 
-	def nyt_sentiment_calc
+	def self.nyt_sentiment_calc
 		Sentimental.load_defaults
 		Sentimental.threshold = 0.1
 		analyzer = Sentimental.new
@@ -41,14 +42,14 @@ class FinancialHistoryData < ActiveRecord::Base
 	end
 
 
-	def fetch_nyt_sentiment
+	def self.fetch_nyt_sentiment
 		sentiment = nyt_sentiment_calc
 		sent_round = (sentiment.inject(0.0) { |sum, element| sum + element } / sentiment.size).round(3)
 		return sent_round
 	end
 
 
-	def fetch_financial_data(ticker)
+	def self.fetch_financial_data(ticker)
 		quotes = YahooFinance.quotes([ticker], [:previous_close, :close], {raw: false})
 		quotes.each do |quote|
 			@previous_close = quote.previous_close.to_f
@@ -59,10 +60,10 @@ class FinancialHistoryData < ActiveRecord::Base
 	end
 
 
-	def update_database
+	def self.update_database
 		nyt_sentiment = fetch_nyt_sentiment.to_f
 
-		FinancialHistoryData.create(date: Date.today.to_s, djia_delta: fetch_financial_data('DIA'), sp_delta: fetch_financial_data('SPY'), twitter_score: 0.95, media_score: nyt_sentiment, investor_score: 1.2)
+		self.create(date: Date.today.to_s, djia_delta: fetch_financial_data('DIA'), sp_delta: fetch_financial_data('SPY'), twitter_score: 0.95, media_score: nyt_sentiment, investor_score: 1.2)
 	end
 
 end
