@@ -13,6 +13,12 @@ gem 'pry-rails'
 # require json for JSON parsing 
 gem 'json'
 
+# require crack to parse XML feeds
+gem 'crack'
+
+# require loofah to whitewash text from news feeds
+gem 'loofah'
+
 # yahoo-finance for financial data
 gem 'yahoo-finance'
 
@@ -25,6 +31,7 @@ gem 'sentimental', github: '7compass/sentimental'
 # dotenv for environment configuration
 gem 'dotenv-rails'
 
+# improve heroku deployment
 gem 'rails_12factor'
 
 # Use SCSS for stylesheets
