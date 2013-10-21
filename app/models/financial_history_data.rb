@@ -43,7 +43,8 @@ class FinancialHistoryData < ActiveRecord::Base
 
 	def fetch_nyt_sentiment
 		sentiment = nyt_sentiment_calc
-		sentiment.inject(0.0) { |sum, element| sum + element } / sentiment.size
+		sent_round = (sentiment.inject(0.0) { |sum, element| sum + element } / sentiment.size).round(3)
+		return sent_round
 	end
 
 
@@ -52,7 +53,7 @@ class FinancialHistoryData < ActiveRecord::Base
 		quotes.each do |quote|
 			@previous_close = quote.previous_close.to_f
 			@close = quote.close.to_f
-			@change = ((@close - @previous_close) / @previous_close) * 100 
+			@change = (((@close - @previous_close) / @previous_close) * 100).round(3)
 		end
 		return @change
 	end
@@ -61,7 +62,7 @@ class FinancialHistoryData < ActiveRecord::Base
 	def update_database
 		nyt_sentiment = fetch_nyt_sentiment.to_f
 
-		FinancialHistoryData.create(date: Date.today, djia_delta: fetch_financial_data('DIA'), sp_delta: fetch_financial_data('SPY'), twitter_score: 0.95, media_score: nyt_sentiment, investor_score: 1.2)
+		FinancialHistoryData.create(date: Date.today.to_s, djia_delta: fetch_financial_data('DIA'), sp_delta: fetch_financial_data('SPY'), twitter_score: 0.95, media_score: nyt_sentiment, investor_score: 1.2)
 	end
 
 end

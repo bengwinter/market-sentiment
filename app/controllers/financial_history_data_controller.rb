@@ -5,7 +5,7 @@ class FinancialHistoryDataController < ApplicationController
   def index
     @financial_history_data = FinancialHistoryData.all
     @data_new = FinancialHistoryData.new
-    # @data_new.update_database
+    @data_new.update_database
   end
 
   # # GET /financial_history_data/1
