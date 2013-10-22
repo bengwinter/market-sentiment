@@ -103,7 +103,7 @@ class FinancialHistoryData < ActiveRecord::Base
 		end
 		djia_hashtags = '$AXP OR $BA OR $CAT OR $CSCO OR $CVX OR $DD OR $DIS OR $GE OR $GS OR $HD OR $IBM OR $INTC OR $JNJ OR $JPM OR $KO OR $MCD OR $MMM OR $MRK OR $MSFT OR $NKE OR $PFE OR $PG OR $T OR $TRV OR $UNH OR $UTX OR $V OR $VZ OR $WMT OR $XOM'
 		tweets_array = []
-		tweets = client.search(djia_hashtags, :count => 10, :lang => "en", :result_type => "recent").collect do |tweet|
+		tweets = client.search(djia_hashtags, :count => 150, :lang => "en", :result_type => "recent").collect do |tweet|
   			tweets_array << tweet.text.to_s
   		end
   		return tweets_array
