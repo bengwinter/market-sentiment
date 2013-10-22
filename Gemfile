@@ -19,6 +19,12 @@ gem 'crack'
 # require loofah to whitewash text from news feeds
 gem 'loofah'
 
+# require sanitize to whitewash text from tweets
+gem 'sanitize', github: 'rgrove/sanitize'
+
+# require twitter for retrieving tweet data
+gem 'twitter', github: 'sferik/twitter'
+
 # yahoo-finance for financial data
 gem 'yahoo-finance'
 
