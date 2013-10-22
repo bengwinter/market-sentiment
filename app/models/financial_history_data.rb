@@ -49,7 +49,7 @@ class FinancialHistoryData < ActiveRecord::Base
 
 
 	def self.fetch_sa_feed
-		link = URI("http://seekingalpha.com/listing/most-popular-articles.xml")
+		link = URI("http://seekingalpha.com/feed.xml")
 		xml = Net::HTTP.get(link)
 		xml_parse = Crack::XML.parse(xml)
 		articles = xml_parse["rss"]["channel"]["item"]
