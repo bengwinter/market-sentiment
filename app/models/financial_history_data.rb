@@ -132,8 +132,10 @@ class FinancialHistoryData < ActiveRecord::Base
 
 
 	def self.update_database
+		utc_time = DateTime.now.utc
+		time = utc_time.in_time_zone('Eastern Time (US & Canada)')
 		nyt_sentiment = fetch_nyt_sentiment.to_f
-		self.create(date: DateTime.now, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment, media_score: nyt_sentiment, investor_score: fetch_sa_sentiment)
+		self.create(date: time, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment, media_score: nyt_sentiment, investor_score: fetch_sa_sentiment)
 	end
 
 end
