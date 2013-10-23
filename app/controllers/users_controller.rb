@@ -62,7 +62,7 @@ class UsersController < ApplicationController
   	def send_password
   		client = Twilio::REST::Client.new ENV['TWILIO_ID'], ENV['TWILIO_TOKEN']
   		user = User.find_by_phone_number(params[:phone_number])
-  		random_password = Array.new(6).map { (65 + rand(52)).chr }.join.to_s
+  		random_password = SecureRandom.hex(3)
   		user.password = random_password
   		user.save!
   		client.account.messages.create(
