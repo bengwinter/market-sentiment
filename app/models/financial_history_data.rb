@@ -138,4 +138,44 @@ class FinancialHistoryData < ActiveRecord::Base
 		self.create(date: time, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment, media_score: nyt_sentiment, investor_score: fetch_sa_sentiment)
 	end
 
+
+	def self.build_message_body
+		today = FinancialHistoryData.all.pop(8)
+		spy_open = today.first.spy_last.to_f
+		dia_open = today.first.dia_last.to_f
+		media_open = today.first.media_score.to_f
+		twitter_open = today.first.twitter_score.to_f
+		investor_open = today.first.investor_score.to_f
+		spy_close = today.last.spy_last.to_f
+		dia_close = today.last.dia_last.to_f
+		media_close = today.last.media_score.to_f
+		twitter_close = today.last.twitter_score.to_f
+		investor_close = today.last.investor_score.to_f
+
+		spy_change = (((spy_close - spy_open) / spy_open) * 100).round(2)
+		dia_change = (((dia_close - dia_open) / dia_open) * 100).round(2)
+		twitter_change = (((twitter_close - twitter_open) / twitter_open) * 100).round(2)
+		investor_change = (((investor_close - investor_open) / investor_open) * 100).round(2)
+		media_change = (((media_close - media_open) / media_open) * 100).round(2)
+
+		text_body = 'Sentimyzer daily update: SPY: ' + spy_change.to_s + '%, DIA: ' + dia_change.to_s + '%, Social: ' + twitter_change.to_s + '%, Media: ' + media_change.to_s + '%, Investor: ' + investor_change.to_s + '%'
+		
+		return text_body
+	end
+
+
+	def self.send_sms_update
+		client = Twilio::REST::Client.new ENV['TWILIO_ID'], ENV['TWILIO_TOKEN']
+  		phone_numbers = User.pluck(:phone_number)
+  		body = self
+  		phone_numbers.each do |phone_number|
+	  		client.account.messages.create(
+	        :from => '+16175443662',
+	        :to => phone_number,
+	       :body => build_message_body
+	      )
+	  	end
+	end
+
+
 end

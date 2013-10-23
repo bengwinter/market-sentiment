@@ -4,3 +4,11 @@ task :update_feed => :environment do
 	FinancialHistoryData.update_database
   puts "finished daily update."
 end
+
+
+desc "Daily text message to registered users"
+task :daily_message => :environment do
+  puts "Sending daily user SMS messages..."
+	FinancialHistoryData.send_sms_update
+  puts "finished sending SMS messages."
+end
