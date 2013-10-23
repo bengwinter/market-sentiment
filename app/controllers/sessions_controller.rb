@@ -4,13 +4,13 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.authenticate(session_params[:email], session_params[:password])
+    user = User.authenticate(session_params[:phone_number], session_params[:password])
 
     if user
       session[:user_id] = user.id
       redirect_to root_url, :notice => "Logged in!"
     else
-      flash.now.alert = "Invalid email or password"
+      flash.now.alert = "Invalid phone number or password"
       render "new"
     end
   end
@@ -23,6 +23,6 @@ class SessionsController < ApplicationController
   private
 
   def session_params
-    params.permit(:email, :password)
+    params.permit(:phone_number, :password)
   end
 end

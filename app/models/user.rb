@@ -8,8 +8,6 @@ class User < ActiveRecord::Base
 
 	  validates_confirmation_of :password
 	  validates_presence_of :password, :on => :create
-	  validates_presence_of :email
-	  validates_uniqueness_of :email
 	  validates_presence_of :phone_number
 	  validates_uniqueness_of :phone_number
 
@@ -23,8 +21,8 @@ class User < ActiveRecord::Base
 	end	
 
 
-	def self.authenticate(email, password)
-		user = self.find_by_email(email)
+	def self.authenticate(phone_number, password)
+		user = self.find_by_phone_number(phone_number)
 		if user && user.password_digest == ::BCrypt::Engine.hash_secret(password, user.password_salt)
 			user
 		else
