@@ -1,8 +1,20 @@
 MarketSentimentAnalysis::Application.routes.draw do
 
   root 'financial_history_data#index'
-
   get 'financial_history_data/index' => 'financial_history_data#index'
+  get "log_in" => "sessions#new", :as => "log_in"
+  get "log_out" => "sessions#destroy", :as => "log_out"
+  get "sign_up" => "users#new", :as => "sign_up"
+  post 'users' => 'users#create', :as => 'users'
+  get 'edit' => "users#edit", :as => "edit_user"
+  patch 'update' => "users#update", :as => "user"
+  get 'show' => "users#show", :as => "show"
+  get 'delete' => "users#destroy", :as => "delete_user"
+  get 'forgot_password' => "users#forgot_password", :as => "forgot_password"
+  post 'send_password' => 'users#send_password', :as => 'send_password'
+
+  resources :sessions
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
