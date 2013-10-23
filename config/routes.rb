@@ -5,15 +5,15 @@ MarketSentimentAnalysis::Application.routes.draw do
   get "log_in" => "sessions#new", :as => "log_in"
   get "log_out" => "sessions#destroy", :as => "log_out"
   get "sign_up" => "users#new", :as => "sign_up"
-  get 'edit' => "users#edit", :as => "modify_user"
-  get 'display' => "users#display", :as => "display_user"
-  get 'delete' => "users#delete", :as => "delete_user"
+  post 'users' => 'users#create', :as => 'users'
+  get 'edit' => "users#edit", :as => "edit_user"
+  patch 'update' => "users#update", :as => "user"
+  get 'show' => "users#show", :as => "show"
+  get 'delete' => "users#destroy", :as => "delete_user"
   get 'forgot_password' => "users#forgot_password", :as => "forgot_password"
   post 'send_password' => 'users#send_password', :as => 'send_password'
 
-  # resources :users
   resources :sessions
-  resources :users 
 
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -2,6 +2,7 @@ require 'bcrypt'
 
 class User < ActiveRecord::Base
 	before_save :encrypt_password
+	before_create { generate_token(:auth_token) }
 
 	include BCrypt
 	attr_accessor :password
@@ -10,6 +11,13 @@ class User < ActiveRecord::Base
 	  validates_presence_of :password, :on => :create
 	  validates_presence_of :phone_number
 	  validates_uniqueness_of :phone_number
+
+	def generate_token(column)
+		begin 
+			self[column] = SecureRandom.urlsafe_base64
+		end while User.exists?(column => self[column])
+	end
+
 
 	def encrypt_password
 		if password.present?
@@ -29,5 +37,6 @@ class User < ActiveRecord::Base
 			nil
 		end
 	end
+
 
 end

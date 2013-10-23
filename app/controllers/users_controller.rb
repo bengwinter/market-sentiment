@@ -9,7 +9,7 @@ class UsersController < ApplicationController
 	  	@user = User.new(user_params)
 	  	if @user.save
 	  		flash[:notice] = "Thanks for signing up" 
-	  		session[:user_id] = @user.id                               
+			cookies.permanent[:auth_token] = @user.auth_token
 	  		redirect_to root_url
 	  	else
 	  		render 'new'
@@ -17,25 +17,25 @@ class UsersController < ApplicationController
 	end
 
 
-	def display
-	  	user_id = session[:user_id]
+	def show
+	  	user_id = current_user.id
 	  	@user = User.find(user_id)
 	end	
 
 
 	def edit
-	  	user_id = session[:user_id]
+	  	user_id = current_user.id
 	  	@user = User.find(user_id)
 	end
 
 
 	def update
-	  	user_id = session[:user_id]
+	  	user_id = current_user.id
 	  	@user = User.find(user_id)
 
 	    respond_to do |format|
 	      if @user.update(user_params)
-	        format.html { render action: 'display' , notice: 'Your profile was successfully updated.' }
+	        format.html { render action: 'show' , notice: 'Your profile was successfully updated.' }
 	      else
 	        format.html { render action: 'edit' }
 	      end
@@ -43,8 +43,9 @@ class UsersController < ApplicationController
 	end
 
 	 
-	def delete
-    	user = User.find(session[:user_id])
+	def destroy
+		user_id = current_user.id
+    	user = User.find(user_id)
     	session[:user_id] = nil
     	user.destroy
 
