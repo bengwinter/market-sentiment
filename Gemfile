@@ -28,6 +28,9 @@ gem 'twitter', github: 'sferik/twitter'
 # yahoo-finance for financial data
 gem 'yahoo-finance'
 
+# include twilio ruby for text message interface
+gem 'twilio-ruby'
+
 # mccandlish to access nytimes data
 gem 'mccandlish'
 
@@ -39,6 +42,12 @@ gem 'dotenv-rails'
 
 # improve heroku deployment
 gem 'rails_12factor'
+
+# using bcrypt for simple user auth
+gem 'bcrypt-ruby', '~> 3.0.0'
+
+# add annotate to annotate the models with schema info
+gem 'annotate'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
