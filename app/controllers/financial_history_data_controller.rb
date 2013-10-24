@@ -7,7 +7,7 @@ class FinancialHistoryDataController < ApplicationController
 
     @chart = LazyHighCharts::HighChart.new('graph') do |f|
       f.title(:text => "Financial Market Sentiment")
-      f.xAxis(:categories => FinancialHistoryData.prepare_entry_dates_for_chart)
+      f.xAxis(:categories => FinancialHistoryData.prepare_entry_dates_for_chart, :labels => {enabled: false})
       f.series(:name => "DIA", :yAxis => 1, :data => FinancialHistoryData.prepare_data_for_chart('dia_last'))
       f.series(:name => "SPY", :yAxis => 1, :data => FinancialHistoryData.prepare_data_for_chart('spy_last'))
       f.series(:name => "Twitter Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_data_for_chart('twitter_score'))
