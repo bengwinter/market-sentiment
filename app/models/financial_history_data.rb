@@ -139,6 +139,26 @@ class FinancialHistoryData < ActiveRecord::Base
 	end
 
 
+	def self.prepare_data_for_chart(data)
+		data = FinancialHistoryData.select(data.to_sym).map(&data.to_sym) 
+		data_array = []
+		data.each do |entry|
+			data_array << entry.to_f
+		end
+		return data_array
+	end
+
+
+	def self.prepare_entry_dates_for_chart
+		times_data = FinancialHistoryData.select(:created_at).map(&:created_at) 
+		times_array = []
+		times_data.each do |entry|
+			times_array << entry.strftime("%m-%d-%Y, %I:%M%p")
+		end
+		return times_array
+	end
+
+
 	def self.build_message_body
 		today = FinancialHistoryData.all.pop(8)
 		spy_open = today.first.spy_last.to_f
@@ -176,6 +196,5 @@ class FinancialHistoryData < ActiveRecord::Base
 	      )
 	  	end
 	end
-
 
 end

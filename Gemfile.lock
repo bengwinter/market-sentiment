@@ -5,6 +5,14 @@ GIT
     sentimental (1.0.3)
 
 GIT
+  remote: git://github.com/michelson/lazy_high_charts.git
+  revision: 35a33fa734226f0c5e99842f26bd006f4905a9e5
+  specs:
+    lazy_high_charts (1.5.0)
+      bundler (>= 1.0)
+      hash-deep-merge
+
+GIT
   remote: git://github.com/rgrove/sanitize.git
   revision: 1c031bb23be21c7b1f8fbd0fe75d9787a85740c5
   specs:
@@ -80,6 +88,7 @@ GEM
     execjs (2.0.2)
     faraday (0.8.8)
       multipart-post (~> 1.2.0)
+    hash-deep-merge (0.1.1)
     hike (1.2.3)
     http (0.5.0)
       http_parser.rb
@@ -199,6 +208,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   json
+  lazy_high_charts!
   loofah
   mccandlish
   pg

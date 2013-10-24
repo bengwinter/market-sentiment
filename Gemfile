@@ -19,6 +19,9 @@ gem 'crack'
 # require loofah to whitewash text from news feeds
 gem 'loofah'
 
+# require lazy high charts for charting
+gem 'lazy_high_charts', github: 'michelson/lazy_high_charts'
+
 # require sanitize to whitewash text from tweets
 gem 'sanitize', github: 'rgrove/sanitize'
 
