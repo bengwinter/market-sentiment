@@ -2,6 +2,8 @@ require 'yahoo_finance'
 
 class FinancialHistoryData < ActiveRecord::Base
 
+#nyt methods
+
 	def self.fetch_nyt_news
 		date = Date.today.to_s.split(/-/).join
 		link_raw = 	"http://api.nytimes.com/svc/search/v2/articlesearch.json?fq=news_desk:(%22Business%22)&begin_date=" + date + "&end_date=" + date + "&api-key=dd560fd468731923ee6fcb7f2213540b:3:6136857"
@@ -14,30 +16,15 @@ class FinancialHistoryData < ActiveRecord::Base
 			text = article["lead_paragraph"].to_s + " " + article["headline"]["main"].to_s
 			article_text << text
 		end 
-		return article_text
+		article_text
 	end
-
-
-	def self.nyt_sentiment_calc
-		Sentimental.load_defaults
-		Sentimental.threshold = 0.1
-		analyzer = Sentimental.new
-		nyt_text = fetch_nyt_news
-		sentiment = []
-		nyt_text.each do |article|
-			sent_score = analyzer.get_score article
-			sentiment << sent_score
-		end
-		sentiment
-	end
-
 
 	def self.fetch_nyt_sentiment
-		sentiment = nyt_sentiment_calc
-		sent_round = (sentiment.inject(0.0) { |sum, element| sum + element } / sentiment.size).round(3)
-		return sent_round
+		sentiment_calculator(fetch_nyt_news)
 	end
 
+
+#financial data methods
 
 	def self.fetch_financial_data(ticker)
 		quotes = YahooFinance.quotes([ticker], [:last_trade_price], {raw: false})
@@ -47,6 +34,8 @@ class FinancialHistoryData < ActiveRecord::Base
 		return @last_trade_price
 	end
 
+
+#seeking alpha methods
 
 	def self.fetch_sa_feed
 		link = URI("http://seekingalpha.com/feed.xml")
@@ -72,27 +61,13 @@ class FinancialHistoryData < ActiveRecord::Base
 		return scrubbed_articles
 	end
 
-
-	def self.sa_sent_calc
-		Sentimental.load_defaults
-		Sentimental.threshold = 0.1
-		analyzer = Sentimental.new
-		sentiment = []
-		scrubbed_feed = scrub_sa_feed
-		scrubbed_feed.each do |article|
-			sent_score = analyzer.get_score article
-			sentiment << sent_score
-		end
-		return sentiment
-	end
-
-
 	def self.fetch_sa_sentiment
-		sentiment = sa_sent_calc
-		sent_round = (sentiment.inject(0.0) { |sum, element| sum + element } / sentiment.size).round(3)
-		return sent_round
+		sentiment_calculator(scrub_sa_feed)
 	end
 
+
+
+#twitter methods
 
 	def self.twitter_fetch_tweets
 		client = Twitter::REST::Client.new do |config|
@@ -109,27 +84,29 @@ class FinancialHistoryData < ActiveRecord::Base
   		return tweets_array
 	end
 
+	def self.fetch_tweet_sentiment
+		sentiment_calculator(twitter_fetch_tweets)
+	end
 
-	def self.tweets_sent_calc
-		tweets = twitter_fetch_tweets
+
+#sentiment calculator
+
+	def self.sentiment_calculator(array)
 		Sentimental.load_defaults
 		Sentimental.threshold = 0.1
 		analyzer = Sentimental.new
 		sentiment = []
-		tweets.each do |tweet|
-			sent_score = analyzer.get_score tweet
+		array.each do |entry|
+			sent_score = analyzer.get_score entry
 			sentiment << sent_score
 		end
-		sentiment
+		sentiment_score = (sentiment.inject(0.0) { |sum, element| sum + element } / sentiment.size).round(3)
+		return sentiment_score
 	end
 
 
-	def self.fetch_tweet_sentiment
-		sentiment = tweets_sent_calc
-		sent_round = (sentiment.inject(0.0) { |sum, element| sum + element } / sentiment.size).round(3)
-		return sent_round
-	end
 
+#update database with sentiment
 
 	def self.update_database
 		utc_time = DateTime.now.utc
@@ -138,6 +115,9 @@ class FinancialHistoryData < ActiveRecord::Base
 		self.create(date: time, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment, media_score: nyt_sentiment, investor_score: fetch_sa_sentiment)
 	end
 
+
+
+#charting methods
 
 	def self.prepare_data_for_chart(data)
 		data = FinancialHistoryData.select(data.to_sym).map(&data.to_sym) 
@@ -159,6 +139,13 @@ class FinancialHistoryData < ActiveRecord::Base
 	end
 
 
+#sms message methods
+
+	def self.daily_change(open, close)
+		(((close - open) / open) * 100).round(2).to_s
+	end
+
+
 	def self.build_message_body
 		today = FinancialHistoryData.all.pop(8)
 		spy_open = today.first.spy_last.to_f
@@ -172,13 +159,13 @@ class FinancialHistoryData < ActiveRecord::Base
 		twitter_close = today.last.twitter_score.to_f
 		investor_close = today.last.investor_score.to_f
 
-		spy_change = (((spy_close - spy_open) / spy_open) * 100).round(2)
-		dia_change = (((dia_close - dia_open) / dia_open) * 100).round(2)
-		twitter_change = (((twitter_close - twitter_open) / twitter_open) * 100).round(2)
-		investor_change = (((investor_close - investor_open) / investor_open) * 100).round(2)
-		media_change = (((media_close - media_open) / media_open) * 100).round(2)
+		spy_change = daily_change(spy_open, spy_close)
+		dia_change = daily_change(dia_open, dia_close)
+		twitter_change = daily_change(twitter_open, twitter_close)
+		investor_change = daily_change(investor_open, investor_close)
+		media_change = daily_change(media_open, media_close)
 
-		text_body = 'Sentimyzer daily update: SPY: ' + spy_change.to_s + '%, DIA: ' + dia_change.to_s + '%, Social: ' + twitter_change.to_s + '%, Media: ' + media_change.to_s + '%, Investor: ' + investor_change.to_s + '%'
+		text_body = 'Sentimyzer daily update: SPY: ' + spy_change + '%, DIA: ' + dia_change + '%, Social: ' + twitter_change + '%, Media: ' + media_change + '%, Investor: ' + investor_change + '%'
 		
 		return text_body
 	end
@@ -187,7 +174,6 @@ class FinancialHistoryData < ActiveRecord::Base
 	def self.send_sms_update
 		client = Twilio::REST::Client.new ENV['TWILIO_ID'], ENV['TWILIO_TOKEN']
   		phone_numbers = User.pluck(:phone_number)
-  		body = self
   		phone_numbers.each do |phone_number|
 	  		client.account.messages.create(
 	        :from => '+16175443662',
