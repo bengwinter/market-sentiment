@@ -2,6 +2,18 @@ require 'yahoo_finance'
 
 class FinancialHistoryData < ActiveRecord::Base
 
+
+#financial data methods
+
+	def self.fetch_financial_data(ticker)
+		quotes = YahooFinance.quotes([ticker], [:last_trade_price], {raw: false})
+		quotes.each do |quote|
+			@last_trade_price = quote.last_trade_price.to_f.round(3)
+		end
+		return @last_trade_price
+	end
+
+
 #nyt methods
 
 	def self.fetch_nyt_news
@@ -9,8 +21,8 @@ class FinancialHistoryData < ActiveRecord::Base
 		link_raw = 	"http://api.nytimes.com/svc/search/v2/articlesearch.json?fq=news_desk:(%22Business%22)&begin_date=" + date + "&end_date=" + date + "&api-key=dd560fd468731923ee6fcb7f2213540b:3:6136857"
 		link = URI(link_raw)
 		json = Net::HTTP.get(link)
-		json_crack = JSON.parse(json)
-		articles = json_crack["response"]["docs"]
+		json_parse = JSON.parse(json)
+		articles = json_parse["response"]["docs"]
 		article_text = []
 		articles.each do |article|
 			text = article["lead_paragraph"].to_s + " " + article["headline"]["main"].to_s
@@ -24,15 +36,25 @@ class FinancialHistoryData < ActiveRecord::Base
 	end
 
 
-#financial data methods
+#forbes methods
 
-	def self.fetch_financial_data(ticker)
-		quotes = YahooFinance.quotes([ticker], [:last_trade_price], {raw: false})
-		quotes.each do |quote|
-			@last_trade_price = quote.last_trade_price.to_f.round(3)
+	def self.fetch_forbes_news
+		link = URI('http://www.forbes.com/real-time/feed2/')
+		xml = Net::HTTP.get(link)
+		xml_parse = Crack::XML.parse(xml)
+		articles = xml_parse["rss"]["channel"]["item"]
+		article_text = []
+		articles.each do |article|
+			text = article["title"].to_s + " " + article["description"].to_s
+			article_text << text
 		end
-		return @last_trade_price
+		article_text
 	end
+
+	def self.fetch_forbes_sentiment
+		sentiment_calculator(fetch_forbes_news)
+	end
+
 
 
 #seeking alpha methods

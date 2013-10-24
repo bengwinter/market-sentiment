@@ -1,4 +1,7 @@
 
+
+
+
  <%= high_chart("main_chart", @chart)  %>
 
 <br/>
@@ -27,6 +30,32 @@
 <% end %>
 
 </table>
+<br/><br/>
+
+<% if !current_user %>
+<h2>Sign up</h2>
+	<div id="signup_homepage">
+	<%= form_for @user do |f| %>
+	  <% if @user.errors.any? %>
+	    <div class='error_messages'>
+	      <h2>Form is invalid</h2>
+	      <ul>
+	        <% @user.errors.full_messages.each do |message| %>
+	          <li><%= message %></li>
+	        <% end %>
+	      <ul>
+	    </div>
+	  <% end %>
 
 
+	  <%= f.label :phone_number %>
+	  <%= f.text_field :phone_number %>
+	  <%= f.label :password %>
+	  <%= f.password_field :password %>
+	  <%= f.label :password_confirmation %>
+	  <%= f.password_field :password_confirmation %>
+	  <%= f.submit "Sign Up" %>
+	<% end %> 
+	</div>
+<% end %>
 
