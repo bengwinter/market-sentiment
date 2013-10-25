@@ -47,25 +47,20 @@ class UsersController < ApplicationController
   	end
 
 
-  	def forgot_password
-  	end
-
-
   	def send_password
   		client = Twilio::REST::Client.new ENV['TWILIO_ID'], ENV['TWILIO_TOKEN']
-  		user = User.find_by_phone_number(params[:phone_number])
-  		random_password = SecureRandom.hex(3)
-  		user.password = random_password
-  		user.save!
-  		client.account.messages.create(
-        :from => '+16175443662',
-        :to => user.phone_number,
-       :body => 'Your new Sentimyzer password is' + ' ' + random_password
-      )
-      redirect_to root_url, notice: 'New password successfully delivered to your phone.'
+  		if current_user
+	  		client.account.messages.create(
+	        :from => '+16175443963',
+	        :to => current_user.phone_number,
+	       :body => 'You requested to reset your password on Sentimyzer.com. Respond to this text with your desired new password.'
+	      )
+      		redirect_to root_url, notice: 'Respond to our text message with your desired new password.'
+  		else
+  			redirect_to root_url, notice: 'Password reset failed.'
+  		end
   	end
   
-
 
   private
 
