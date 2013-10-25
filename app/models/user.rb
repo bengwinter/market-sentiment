@@ -11,7 +11,10 @@ class User < ActiveRecord::Base
 	  validates_presence_of :password, :on => :create
 	  validates_presence_of :phone_number
 	  validates_uniqueness_of :phone_number
-	  # validates_format_of :phone_number, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :on => :create
+	  validates_format_of :phone_number, 
+                    :with => /1?\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})/, 
+                    :allow_blank => false, 
+                    :allow_nil => false
 
 	def generate_token(column)
 		begin 
