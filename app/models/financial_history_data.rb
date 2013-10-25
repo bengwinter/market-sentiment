@@ -131,15 +131,19 @@ class FinancialHistoryData < ActiveRecord::Base
 
 	def self.sentiment_calculator(array)
 		Sentimental.load_defaults
-		Sentimental.threshold = 0.1
+		Sentimental.threshold = 0.25
 		analyzer = Sentimental.new
+		sentiment_raw = []
 		sentiment = []
 		array.each do |entry|
-			sent_score = analyzer.get_score entry
-			sentiment << sent_score
+			raw = analyzer.get_score entry
+			sent = analyzer.get_sentiment entry
+			sentiment_raw << raw
+			sentiment << sent
 		end
-		sentiment_score = (sentiment.inject(0.0) { |sum, element| sum + element } / sentiment.size).round(3)
-		return sentiment_score
+		sentiment_score = (sentiment_raw.inject(0.0) { |sum, element| sum + element } / sentiment.size).round(3)
+		sentiment_count = sentiment.dup_hash
+		{:score => sentiment_score, :count => sentiment_count}
 	end
 
 
@@ -147,19 +151,60 @@ class FinancialHistoryData < ActiveRecord::Base
 #aggregate data and update database with sentiment
 
 	def self.fetch_media_sentiment
-		ycharts = fetch_ycharts_sentiment
-		cnbc = fetch_cnbc_sentiment
-		forbes = fetch_forbes_sentiment
-		nyt = fetch_nyt_sentiment
-		return (ycharts + cnbc + forbes + nyt) / 4
+		ycharts = fetch_ycharts_sentiment[:score].to_f
+		cnbc = fetch_cnbc_sentiment[:score].to_f
+		forbes = fetch_forbes_sentiment[:score].to_f
+		nyt = fetch_nyt_sentiment[:score].to_f
+		return ((ycharts + cnbc + forbes + nyt) / 4).round(3)
 	end
 
 
 	def self.update_database
+		sa_sent = fetch_sa_sentiment
+		sa_sent_score = sa_sent[:score].to_f
+		sa_pos = sa_sent[:count]["positive"].to_f
+		sa_neu = sa_sent[:count]["neutral"].to_f
+		sa_neg = sa_sent[:count]["negative"].to_f
+
+		tweet_sent = fetch_tweet_sentiment
+		tweet_sent_score = tweet_sent[:score].to_f
+		tweet_pos = tweet_sent[:count]["positive"].to_f
+		tweet_neu = tweet_sent[:count]["neutral"].to_f
+		tweet_neg = tweet_sent[:count]["negative"].to_f
+
+		cnbc_sent = fetch_cnbc_sentiment
+		cnbc_sent_score = cnbc_sent[:score].to_f
+		cnbc_pos = cnbc_sent[:count]["positive"].to_f
+		cnbc_neu = cnbc_sent[:count]["neutral"].to_f
+		cnbc_neg = cnbc_sent[:count]["negative"].to_f
+
+		ycharts_sent = fetch_ycharts_sentiment
+		ycharts_sent_score = ycharts_sent[:score].to_f
+		ycharts_pos = ycharts_sent[:count]["positive"].to_f
+		ycharts_neu = ycharts_sent[:count]["neutral"].to_f
+		ycharts_neg = ycharts_sent[:count]["negative"].to_f
+
+		forbes_sent = fetch_forbes_sentiment
+		forbes_sent_score = forbes_sent[:score].to_f
+		forbes_pos = forbes_sent[:count]["positive"].to_f
+		forbes_neu = forbes_sent[:count]["neutral"].to_f
+		forbes_neg = forbes_sent[:count]["negative"].to_f
+
+		nyt_sent = fetch_nyt_sentiment
+		nyt_sent_score = nyt_sent[:score].to_f
+		nyt_pos = nyt_sent[:count]["positive"].to_f
+		nyt_neu = nyt_sent[:count]["neutral"].to_f
+		nyt_neg = nyt_sent[:count]["negative"].to_f
+
+		media_sent_score = (nyt_sent_score + forbes_sent_score + ycharts_sent_score + cnbc_sent_score + tweet_sent_score + sa_sent_score) / 6
+
+		pos_entries = nyt_pos + forbes_pos + ycharts_pos + cnbc_pos + tweet_pos + sa_pos
+		neu_entries = nyt_neu + forbes_neu + ycharts_neu + cnbc_neu + tweet_neu + sa_neu
+		neg_entries = nyt_neg + forbes_neg + ycharts_neg + cnbc_neg + tweet_neg + sa_neg
+
 		utc_time = DateTime.now.utc
 		time = utc_time.in_time_zone('Eastern Time (US & Canada)')
-		nyt_sentiment = fetch_nyt_sentiment.to_f
-		self.create(date: time, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment, media_score: fetch_media_sentiment, investor_score: fetch_sa_sentiment)
+		self.create(date: time, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: tweet_sent_score, media_score: media_sent_score, investor_score: sa_sent_score)
 	end
 
 
@@ -239,7 +284,7 @@ class FinancialHistoryData < ActiveRecord::Base
 		investor_change = ((daily_change(investor_open, investor_close) + daily_change(twitter_open, twitter_close)).to_f / 2).to_s
 		media_change = daily_change(media_open, media_close)
 
-		text_body = 'Sentimyzer daily update: SPY: ' + spy_change + '%, DIA: ' + dia_change + '%, Investor: ' + investor_change + '%, Media: ' + media_change + '%'
+		text_body = 'Sentimyzer daily update: DIA: ' + dia_change + '%, Investor: ' + investor_change + '%, Media: ' + media_change + '%'
 		
 		return text_body
 	end

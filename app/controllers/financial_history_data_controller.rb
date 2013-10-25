@@ -3,7 +3,6 @@ class FinancialHistoryDataController < ApplicationController
 
   # GET /financial_history_data
   def index
-    FinancialHistoryData.prepare_investor_data_for_chart
     @financial_history_data = FinancialHistoryData.all
     @user = User.new
 
