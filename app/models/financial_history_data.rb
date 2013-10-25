@@ -3,6 +3,22 @@ require 'yahoo_finance'
 class FinancialHistoryData < ActiveRecord::Base
 
 
+# fetch and format standard xml feeds
+
+	def self.fetch_standard_xml(link)
+		article_text = []
+		link = URI(link.to_s)
+		xml = Net::HTTP.get(link)
+		xml_parse = Crack::XML.parse(xml)
+		articles = xml_parse["rss"]["channel"]["item"]
+		articles.each do |article|
+		text = article["title"].to_s + " " + article["description"].to_s
+		article_text << text
+		end
+		article_text		
+	end
+
+
 #financial data methods
 
 	def self.fetch_financial_data(ticker)
@@ -38,23 +54,23 @@ class FinancialHistoryData < ActiveRecord::Base
 
 #forbes methods
 
-	def self.fetch_forbes_news
-		link = URI('http://www.forbes.com/real-time/feed2/')
-		xml = Net::HTTP.get(link)
-		xml_parse = Crack::XML.parse(xml)
-		articles = xml_parse["rss"]["channel"]["item"]
-		article_text = []
-		articles.each do |article|
-			text = article["title"].to_s + " " + article["description"].to_s
-			article_text << text
-		end
-		article_text
-	end
-
 	def self.fetch_forbes_sentiment
-		sentiment_calculator(fetch_forbes_news)
+		sentiment_calculator(fetch_standard_xml('http://www.forbes.com/real-time/feed2/'))
 	end
 
+
+# cnbc top news methods
+
+	def self.fetch_cnbc_sentiment
+		sentiment_calculator(fetch_standard_xml('http://www.cnbc.com/id/100003114/device/rss/rss.html'))
+	end
+
+
+# ychart news methods
+
+	def self.fetch_ycharts_sentiment
+		sentiment_calculator(fetch_standard_xml('http://finance.yahoo.com/news/provider-ycharts/rss'))
+	end
 
 
 #seeking alpha methods
@@ -128,26 +144,64 @@ class FinancialHistoryData < ActiveRecord::Base
 
 
 
-#update database with sentiment
+#aggregate data and update database with sentiment
+
+	def self.fetch_media_sentiment
+		ycharts = fetch_ycharts_sentiment
+		cnbc = fetch_cnbc_sentiment
+		forbes = fetch_forbes_sentiment
+		nyt = fetch_nyt_sentiment
+		return (ycharts + cnbc + forbes + nyt) / 4
+	end
+
 
 	def self.update_database
 		utc_time = DateTime.now.utc
 		time = utc_time.in_time_zone('Eastern Time (US & Canada)')
 		nyt_sentiment = fetch_nyt_sentiment.to_f
-		self.create(date: time, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment, media_score: nyt_sentiment, investor_score: fetch_sa_sentiment)
+		self.create(date: time, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment, media_score: fetch_media_sentiment, investor_score: fetch_sa_sentiment)
 	end
 
 
 
 #charting methods
 
-	def self.prepare_data_for_chart(data)
-		data = FinancialHistoryData.select(data.to_sym).map(&data.to_sym) 
-		data_array = []
-		data.each do |entry|
-			data_array << entry.to_f
+	def self.convert_database_table_to_array_to_floats(key)
+		big_decimal_array = FinancialHistoryData.select(key.to_sym).map(&key.to_sym) 
+		float_array = []
+		big_decimal_array.each do |entry|
+			float_array << entry.to_f.round(3)
 		end
-		return data_array
+		float_array
+	end
+
+
+  def self.prepare_data_for_chart(data)
+    data = FinancialHistoryData.select(data.to_sym).map(&data.to_sym) 
+    data_array = []
+    data.each do |entry|
+    	data_array << entry.to_f
+    end
+    return data_array
+	end
+
+
+	def self.prepare_media_data_for_chart
+		convert_database_table_to_array_to_floats('media_score')
+	end
+
+
+	def self.prepare_investor_data_for_chart
+		twitter_array = convert_database_table_to_array_to_floats('twitter_score')
+		sa_array = convert_database_table_to_array_to_floats('investor_score')
+
+		investor_array = []
+		i = 0
+		twitter_array.each do |score|
+			investor_score = (score + sa_array[i])/2
+			investor_array << investor_score.round(3)
+			i += 1
+		end
 	end
 
 

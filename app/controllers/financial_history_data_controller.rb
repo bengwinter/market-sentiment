@@ -3,6 +3,7 @@ class FinancialHistoryDataController < ApplicationController
 
   # GET /financial_history_data
   def index
+    FinancialHistoryData.prepare_investor_data_for_chart
     @financial_history_data = FinancialHistoryData.all
     @user = User.new
 
@@ -11,9 +12,8 @@ class FinancialHistoryDataController < ApplicationController
       f.xAxis(:categories => FinancialHistoryData.prepare_entry_dates_for_chart, :labels => {enabled: false})
       f.series(:name => "DIA", :yAxis => 1, :data => FinancialHistoryData.prepare_data_for_chart('dia_last'))
       f.series(:name => "SPY", :yAxis => 1, :data => FinancialHistoryData.prepare_data_for_chart('spy_last'))
-      f.series(:name => "Twitter Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_data_for_chart('twitter_score'))
-      f.series(:name => "Media Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_data_for_chart('media_score'))
-      f.series(:name => "Investor Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_data_for_chart('investor_score'))
+      f.series(:name => "Investor Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_investor_data_for_chart)
+      f.series(:name => "Media Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_media_data_for_chart)
 
       f.yAxis [
         {:title => {:text => "Raw Sentiment Score", :margin => 70} },
