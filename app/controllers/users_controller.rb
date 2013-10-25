@@ -74,8 +74,7 @@ class UsersController < ApplicationController
   	end
   
   	def process_sms
-	    @city = params[:FromCity].capitalize
-	    @state = params[:FromState]
+	    @response = params[:body].capitalize
 	    render 'process_sms.xml.erb', :content_type => 'text/xml'
   	end
 
