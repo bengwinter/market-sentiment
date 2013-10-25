@@ -56,8 +56,15 @@ class UsersController < ApplicationController
 	       :body => 'You requested to reset your password on Sentimyzer.com. Respond to this text with your desired new password.'
 	      )
       		redirect_to root_url, notice: 'Respond to our text message with your desired new password.'
+  		elsif params[:phone_number]
+  			client.account.messages.create(
+	        :from => '+16175443963',
+	        :to => params[:phone_number],
+	       :body => 'You requested to reset your password on Sentimyzer.com. Respond to this text with your desired new password.'
+	      )
+      		redirect_to root_url, notice: 'Respond to our text message with your desired new password.'
   		else
-  			redirect_to root_url, notice: 'Password reset failed.'
+  			redirect_to root_url, notice: 'We did not recognize that phone number.  Please try again or create a new account.'
   		end
   	end
   

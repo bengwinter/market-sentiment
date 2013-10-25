@@ -89,5 +89,14 @@
 	  <%= f.submit "Sign Up" %>
 	<% end %> 
 	</div>
+
+<br/><br/>
+<h3>Forgot Password</h3>
+  <%= form_tag send_password_path do %> 
+    <p>
+    	<%= label_tag :phone_number %>
+    	<%= text_field_tag :phone_number %>
+    	<%= submit_tag "Send text message with new password" %> </p>
+  <% end %> 
 <% end %>
 
