@@ -162,39 +162,39 @@ class FinancialHistoryData < ActiveRecord::Base
 	def self.update_database
 		sa_sent = fetch_sa_sentiment
 		sa_sent_score = sa_sent[:score].to_f
-		sa_pos = sa_sent[:count]["positive"].to_f
-		sa_neu = sa_sent[:count]["neutral"].to_f
-		sa_neg = sa_sent[:count]["negative"].to_f
+		sa_pos = sa_sent[:count][:positive].to_f
+		sa_neu = sa_sent[:count][:neutral].to_f
+		sa_neg = sa_sent[:count][:negative].to_f
 
 		tweet_sent = fetch_tweet_sentiment
 		tweet_sent_score = tweet_sent[:score].to_f
-		tweet_pos = tweet_sent[:count]["positive"].to_f
-		tweet_neu = tweet_sent[:count]["neutral"].to_f
-		tweet_neg = tweet_sent[:count]["negative"].to_f
+		tweet_pos = tweet_sent[:count][:positive].to_f
+		tweet_neu = tweet_sent[:count][:neutral].to_f
+		tweet_neg = tweet_sent[:count][:negative].to_f
 
 		cnbc_sent = fetch_cnbc_sentiment
 		cnbc_sent_score = cnbc_sent[:score].to_f
-		cnbc_pos = cnbc_sent[:count]["positive"].to_f
-		cnbc_neu = cnbc_sent[:count]["neutral"].to_f
-		cnbc_neg = cnbc_sent[:count]["negative"].to_f
+		cnbc_pos = cnbc_sent[:count][:positive].to_f
+		cnbc_neu = cnbc_sent[:count][:neutral].to_f
+		cnbc_neg = cnbc_sent[:count][:negative].to_f
 
 		ycharts_sent = fetch_ycharts_sentiment
 		ycharts_sent_score = ycharts_sent[:score].to_f
-		ycharts_pos = ycharts_sent[:count]["positive"].to_f
-		ycharts_neu = ycharts_sent[:count]["neutral"].to_f
-		ycharts_neg = ycharts_sent[:count]["negative"].to_f
+		ycharts_pos = ycharts_sent[:count][:positive].to_f
+		ycharts_neu = ycharts_sent[:count][:neutral].to_f
+		ycharts_neg = ycharts_sent[:count][:negative].to_f
 
 		forbes_sent = fetch_forbes_sentiment
 		forbes_sent_score = forbes_sent[:score].to_f
-		forbes_pos = forbes_sent[:count]["positive"].to_f
-		forbes_neu = forbes_sent[:count]["neutral"].to_f
-		forbes_neg = forbes_sent[:count]["negative"].to_f
+		forbes_pos = forbes_sent[:count][:positive].to_f
+		forbes_neu = forbes_sent[:count][:neutral].to_f
+		forbes_neg = forbes_sent[:count][:negative].to_f
 
 		nyt_sent = fetch_nyt_sentiment
 		nyt_sent_score = nyt_sent[:score].to_f
-		nyt_pos = nyt_sent[:count]["positive"].to_f
-		nyt_neu = nyt_sent[:count]["neutral"].to_f
-		nyt_neg = nyt_sent[:count]["negative"].to_f
+		nyt_pos = nyt_sent[:count][:positive].to_f
+		nyt_neu = nyt_sent[:count][:neutral].to_f
+		nyt_neg = nyt_sent[:count][:negative].to_f
 
 		media_sent_score = (nyt_sent_score + forbes_sent_score + ycharts_sent_score + cnbc_sent_score + tweet_sent_score + sa_sent_score) / 6
 
@@ -202,9 +202,10 @@ class FinancialHistoryData < ActiveRecord::Base
 		neu_entries = nyt_neu + forbes_neu + ycharts_neu + cnbc_neu + tweet_neu + sa_neu
 		neg_entries = nyt_neg + forbes_neg + ycharts_neg + cnbc_neg + tweet_neg + sa_neg
 
+		binding.pry
 		utc_time = DateTime.now.utc
 		time = utc_time.in_time_zone('Eastern Time (US & Canada)')
-		self.create(date: time, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: tweet_sent_score, media_score: media_sent_score, investor_score: sa_sent_score)
+		self.create(date: time, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: tweet_sent_score, media_score: media_sent_score, investor_score: sa_sent_score, positive_entries: pos_entries,  neutral_entries: neu_entries, negative_entries: neg_entries)
 	end
 
 

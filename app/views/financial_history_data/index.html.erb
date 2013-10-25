@@ -16,6 +16,10 @@
 <th>Twitter Sentiment Score</th>
 <th>Media Sentiment Score</th>
 <th>Investor Sentiment Score</th>
+<th>Positive Entries</th>
+<th>Neutral Entries</th>
+<th>Negative Entries</th>
+
 </tr>
 
 <% @financial_history_data.each do |entry| %>
@@ -26,6 +30,10 @@
 <td><%= entry.twitter_score.to_s %></td>
 <td><%= entry.media_score.to_s %></td>
 <td><%= entry.investor_score.to_s %></td>
+<td><%= entry.positive_entries.to_s %></td>
+<td><%= entry.neutral_entries.to_s %></td>
+<td><%= entry.negative_entries.to_s %></td>
+
 </tr>
 <% end %>
 
