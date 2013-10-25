@@ -234,14 +234,12 @@ class FinancialHistoryData < ActiveRecord::Base
 		media_close = today.last.media_score.to_f
 		twitter_close = today.last.twitter_score.to_f
 		investor_close = today.last.investor_score.to_f
-
 		spy_change = daily_change(spy_open, spy_close)
 		dia_change = daily_change(dia_open, dia_close)
-		twitter_change = daily_change(twitter_open, twitter_close)
-		investor_change = daily_change(investor_open, investor_close)
+		investor_change = ((daily_change(investor_open, investor_close) + daily_change(twitter_open, twitter_close)).to_f / 2).to_s
 		media_change = daily_change(media_open, media_close)
 
-		text_body = 'Sentimyzer daily update: SPY: ' + spy_change + '%, DIA: ' + dia_change + '%, Social: ' + twitter_change + '%, Media: ' + media_change + '%, Investor: ' + investor_change + '%'
+		text_body = 'Sentimyzer daily update: SPY: ' + spy_change + '%, DIA: ' + dia_change + '%, Investor: ' + investor_change + '%, Media: ' + media_change + '%'
 		
 		return text_body
 	end
