@@ -11,13 +11,14 @@ class FinancialHistoryDataController < ApplicationController
       f.title(:text => "Financial Market Sentiment")
       f.xAxis(:categories => FinancialHistoryData.prepare_entry_dates_for_chart, :labels => {enabled: false})
       f.series(:name => "DIA", :yAxis => 1, :data => FinancialHistoryData.prepare_data_for_chart('dia_last'))
-      f.series(:name => "SPY", :yAxis => 1, :data => FinancialHistoryData.prepare_data_for_chart('spy_last'))
+      f.series(:name => "SPY", :yAxis => 2, :data => FinancialHistoryData.prepare_data_for_chart('spy_last'))
       f.series(:name => "Investor Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_investor_data_for_chart)
       f.series(:name => "Media Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_media_data_for_chart)
 
       f.yAxis [
-        {:title => {:text => "Raw Sentiment Score", :margin => 70} },
-        {:title => {:text => "DIA & SPY Market Price"}, :opposite => true},
+        {:title => {:text => "Raw Sentiment Score", :margin => 20}, :opposite => true },
+        {:title => {:text => "DIA Market Price", :margin => 20}},
+        {:title => {:text => "SPY Market Price", :margin => 20}}
       ]
 
       f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
