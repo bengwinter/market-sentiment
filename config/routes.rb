@@ -1,10 +1,7 @@
 MarketSentimentAnalysis::Application.routes.draw do
 
   root 'financial_history_data#index'
-  get 'financial_history_data/index' => 'financial_history_data#index'
-  get "log_in" => "sessions#new", :as => "log_in"
   get "log_out" => "sessions#destroy", :as => "log_out"
-  get "sign_up" => "users#new", :as => "sign_up"
   post 'users' => 'users#create', :as => 'users'
   get 'edit' => "users#edit", :as => "edit_user"
   patch 'update' => "users#update", :as => "user"

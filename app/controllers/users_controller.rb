@@ -18,7 +18,7 @@ class UsersController < ApplicationController
 			cookies.permanent[:auth_token] = @user.auth_token
 	  		redirect_to root_url
 	  	else
-	  		render 'new'
+	  		redirect_to root_url, :notice => "Registration failed. Please try again."
 	  	end
 	end
 
