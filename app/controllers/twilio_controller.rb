@@ -5,11 +5,11 @@ class TwilioController < ApplicationController
 	    body = params[:Body].to_s.downcase
 	   	client = Twilio::REST::Client.new ENV['TWILIO_ID'], ENV['TWILIO_TOKEN']
 
-	   	user = User.find_by_phone_number(sender)
+	   	@user = User.find_by_phone_number(sender)
 
-	   	if user
+	   	if @user
 		    if body == 'yes'
-		    	user.update(:verified => true)
+		    	@user.update(verified: true)
 		  		client.account.messages.create(
 		        :from => '+16175443662',
 		        :to => sender,
