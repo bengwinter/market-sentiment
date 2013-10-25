@@ -52,6 +52,7 @@ class TwilioController < ApplicationController
 		        :to => sender,
 		       :body => "We couldn't save your new password.  Please try again."
 		      )
+		  	end
   	else 
   		client.account.messages.create(
         :from => '+16175443963',
