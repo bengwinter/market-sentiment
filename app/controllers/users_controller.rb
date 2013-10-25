@@ -23,18 +23,6 @@ class UsersController < ApplicationController
 	end
 
 
-	def show
-	  	user_id = current_user.id
-	  	@user = User.find(user_id)
-	end	
-
-
-	def edit
-	  	user_id = current_user.id
-	  	@user = User.find(user_id)
-	end
-
-
 	def update
 	  	user_id = current_user.id
 	  	@user = User.find(user_id)
@@ -55,9 +43,7 @@ class UsersController < ApplicationController
     	session[:user_id] = nil
     	user.destroy
 
-    	respond_to do |format|
-      		format.html { redirect_to root_url }
-    	end
+    	redirect_to root_url, notice: 'You were successfully unsubscribed from our alert list'
   	end
 
 
