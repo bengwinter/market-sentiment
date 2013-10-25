@@ -7,8 +7,14 @@ class UsersController < ApplicationController
   # process the signup form
 	def create
 	  	@user = User.new(user_params)
+	  	client = Twilio::REST::Client.new ENV['TWILIO_ID'], ENV['TWILIO_TOKEN']
 	  	if @user.save
-	  		flash[:notice] = "Thanks for signing up" 
+	  		client.account.messages.create(
+		        :from => '+16175443662',
+		        :to => @user.phone_number.to_s,
+		       :body => "Welcome to Sentimyzer! Please respond 'yes' to verify your phone number!"
+		      )
+	  		flash[:notice] = "Thanks for signing up. Please respond to our text message to verify your phone number." 
 			cookies.permanent[:auth_token] = @user.auth_token
 	  		redirect_to root_url
 	  	else

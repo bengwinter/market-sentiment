@@ -40,6 +40,32 @@
 </table>
 <br/><br/>
 
+<table border="1">
+<tr>
+<th>Email</th>
+<th>Phone</th>
+<th>Created</th>
+<th>Updated</th>
+<th>Verified</th>
+
+</tr>
+
+<% @users.each do |user| %>
+<tr>
+<td><%= user.email.to_s %></td>
+<td><%= user.phone_number.to_s %></td>
+<td><%= user.created_at.to_s %></td>
+<td><%= user.updated_at.to_s %></td>
+<td><%= user.verified.to_s %></td>
+
+</tr>
+<% end %>
+
+</table>
+
+<br/><br/>
+
+
 <% if !current_user %>
 <h2>Sign up</h2>
 	<div id="signup_homepage">

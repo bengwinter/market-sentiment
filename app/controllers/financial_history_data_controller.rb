@@ -5,6 +5,7 @@ class FinancialHistoryDataController < ApplicationController
   def index
     @financial_history_data = FinancialHistoryData.all
     @user = User.new
+    @users = User.all
 
     @chart = LazyHighCharts::HighChart.new('graph') do |f|
       f.title(:text => "Financial Market Sentiment")

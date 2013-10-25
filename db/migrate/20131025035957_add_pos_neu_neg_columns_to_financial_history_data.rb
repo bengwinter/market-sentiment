@@ -4,6 +4,6 @@ class AddPosNeuNegColumnsToFinancialHistoryData < ActiveRecord::Migration
   	t.integer :positive_entries
   	t.integer :neutral_entries
   	t.integer :negative_entries
-end
+	end
   end
 end
