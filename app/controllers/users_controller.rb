@@ -73,12 +73,6 @@ class UsersController < ApplicationController
       redirect_to root_url, notice: 'New password successfully delivered to your phone.'
   	end
   
-  	def process_sms
-	    sender = params[:From].capitalize
-		    twiml = Twilio::TwiML::Response.new do |r|
-	    		r.Message "Hello, #{sender}. Thanks for the message."
-	  		end
-  	end
 
 
   private
