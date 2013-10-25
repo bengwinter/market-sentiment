@@ -3,7 +3,6 @@ class FinancialHistoryDataController < ApplicationController
 
   # GET /financial_history_data
   def index
-    FinancialHistoryData.update_database
     @financial_history_data = FinancialHistoryData.all
     @user = User.new
 
@@ -13,6 +12,13 @@ class FinancialHistoryDataController < ApplicationController
       f.series(:name => "DIA (SPDR 1x DJIA ETF)", :yAxis => 1, :data => FinancialHistoryData.prepare_data_for_chart('dia_last'))
       f.series(:name => "Investor Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_investor_data_for_chart)
       f.series(:name => "Media Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_media_data_for_chart)
+      f.series(:type=> 'pie',:name=> "Today's Sentiment Breakdown", 
+            :data=> [
+              {:name=> 'Positive', :y=> FinancialHistoryData.prepare_count_data_for_pie_chart[:positive], :color=> 'green'}, 
+              {:name=> 'Neutral', :y=> FinancialHistoryData.prepare_count_data_for_pie_chart[:neutral], :color=> 'gray'},
+              {:name=> 'Negative', :y=> FinancialHistoryData.prepare_count_data_for_pie_chart[:negative], :color=> 'red'}
+            ],
+            :center=> [80,10], :size=> 100, :showInLegend=> false)
 
       f.yAxis [
         {:title => {:text => "Raw Sentiment Score", :margin => 20}, :opposite => true },
