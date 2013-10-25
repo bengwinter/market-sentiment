@@ -305,7 +305,7 @@ class FinancialHistoryData < ActiveRecord::Base
 
 	def self.send_sms_update
 		client = Twilio::REST::Client.new ENV['TWILIO_ID'], ENV['TWILIO_TOKEN']
-  		phone_numbers = User.pluck(:phone_number)
+  		phone_numbers = User.where(verified: true).pluck(:phone_number)
   		phone_numbers.each do |phone_number|
 	  		client.account.messages.create(
 	        :from => '+16175443662',
