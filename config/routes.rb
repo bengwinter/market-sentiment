@@ -12,7 +12,7 @@ MarketSentimentAnalysis::Application.routes.draw do
   get 'delete' => "users#destroy", :as => "delete_user"
   get 'forgot_password' => "users#forgot_password", :as => "forgot_password"
   post 'send_password' => 'users#send_password', :as => 'send_password'
-  post 'process_sms' => 'twilio#process_sms', :as => 'process_sms'
+  get 'process_sms' => 'twilio#process_sms', :as => 'process_sms'
 
   resources :sessions
 
