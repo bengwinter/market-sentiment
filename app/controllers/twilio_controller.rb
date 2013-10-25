@@ -7,10 +7,9 @@ class TwilioController < ApplicationController
 	    client = Twilio::REST::Client.new ENV['TWILIO_ID'], ENV['TWILIO_TOKEN']
   		client.account.messages.create(
         :from => '+16175443662',
-        :to => '+12037709951',
+        :to => sender,
        :body => 'Thank you ' + sender + ' your message was ' + body
       )
-      # redirect_to root_url, notice: 'New password successfully delivered to your phone.'
   	end
 
 
