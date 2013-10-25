@@ -74,8 +74,10 @@ class UsersController < ApplicationController
   	end
   
   	def process_sms
-	    @response = params[:body].capitalize
-	    render 'process_sms.xml.erb', :content_type => 'text/xml'
+	    sender = params[:From].capitalize
+		    twiml = Twilio::TwiML::Response.new do |r|
+	    		r.Message "Hello, #{sender}. Thanks for the message."
+	  		end
   	end
 
 
