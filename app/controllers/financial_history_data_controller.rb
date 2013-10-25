@@ -32,6 +32,8 @@ class FinancialHistoryDataController < ApplicationController
   end
 
 
+
+
   # # GET /financial_history_data/1
   # def show
   # end
