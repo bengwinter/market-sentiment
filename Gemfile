@@ -46,6 +46,11 @@ gem 'dotenv-rails'
 # improve heroku deployment
 gem 'rails_12factor'
 
+# include gumby-dependent gems
+gem 'compass'
+gem 'modular-scale' 
+gem 'sass' 
+
 # using bcrypt for simple user auth
 gem 'bcrypt-ruby', '~> 3.0.0'
 

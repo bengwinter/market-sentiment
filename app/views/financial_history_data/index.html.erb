@@ -1,74 +1,22 @@
+<div id="wrapper">
+<div id="main">
 
-
-
-
+<!-- chart section -->
+<div class="section">
+<div class="headerspace"></div>
+<div class="headerspace"></div>
  <%= high_chart("main_chart", @chart)  %>
-
+ </div>
 <br/>
-<br/>
 
-
-<table border="1">
-<tr>
-<th>Date/Time</th>
-<th>DIA Last Trade</th>
-<th>SPY Last Trade</th>
-<th>Twitter Sentiment Score</th>
-<th>Media Sentiment Score</th>
-<th>Investor Sentiment Score</th>
-<th>Positive Entries</th>
-<th>Neutral Entries</th>
-<th>Negative Entries</th>
-
-</tr>
-
-<% @financial_history_data.each do |entry| %>
-<tr>
-<td><%= entry.date.to_s %></td>
-<td><%= entry.dia_last.to_s %></td>
-<td><%= entry.spy_last.to_s %></td>
-<td><%= entry.twitter_score.to_s %></td>
-<td><%= entry.media_score.to_s %></td>
-<td><%= entry.investor_score.to_s %></td>
-<td><%= entry.positive_entries.to_s %></td>
-<td><%= entry.neutral_entries.to_s %></td>
-<td><%= entry.negative_entries.to_s %></td>
-
-</tr>
-<% end %>
-
-</table>
-<br/><br/>
-
-<table border="1">
-<tr>
-<th>Email</th>
-<th>Phone</th>
-<th>Created</th>
-<th>Updated</th>
-<th>Verified</th>
-
-</tr>
-
-<% @users.each do |user| %>
-<tr>
-<td><%= user.email.to_s %></td>
-<td><%= user.phone_number.to_s %></td>
-<td><%= user.created_at.to_s %></td>
-<td><%= user.updated_at.to_s %></td>
-<td><%= user.verified.to_s %></td>
-
-</tr>
-<% end %>
-
-</table>
-
-<br/><br/>
-
+<!-- new user signup form -->
 
 <% if !current_user %>
-<h2>Sign up</h2>
-	<div id="signup_homepage">
+	<div class="signup">
+	<div class="section">
+	<div class="headerspace"></div>
+	<h3>Subscribe for daily text message updates</h3>
+	<div class="line-separator"></div>
 	<%= form_for @user do |f| %>
 	  <% if @user.errors.any? %>
 	    <div class='error_messages'>
@@ -77,19 +25,42 @@
 	        <% @user.errors.full_messages.each do |message| %>
 	          <li><%= message %></li>
 	        <% end %>
-	      <ul>
-	    </div>
+	      </ul>
 	  <% end %>
 
-
-	  <%= f.label :phone_number %>
-	  <%= f.text_field :phone_number %>
-	  <%= f.label :password %>
-	  <%= f.password_field :password %>
-	  <%= f.submit "Sign Up" %>
-	<% end %> 
+	  <%= f.text_field :phone_number, placeholder: '617-544-3963' %>
+	  <%= f.password_field :password, placeholder: 'password' %>
+	  <%= f.submit "subscribe" %>
+	  </div>
 	</div>
+	<% end %> 
 
+<div class="section">
+<div class="headerspace"></div>
+<h3>data sources</h3>
+<div class="line-separator"></div>
+
+<div class="datasources">
+<ul>
+	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/forbes_logo.jpg" height="35" /></li>
+	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/nyt_logo.jpg" height="35" /></li>
+	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/sa_logo.jpg" height="35" /></li>
+	<br/>
+	
+	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/cnbc_logo.jpg" height="30" /></li>
+	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/ycharts_logo.jpg" height="35" /></li>
+	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/twitter_logo.jpg" height="35" /></li>
+</ul>
+</div>
+</div>
+
+
+<br/>
+<br/><br/>
+
+
+
+<div class="section">
 <br/><br/>
 <h3>Forgot Password</h3>
   <%= form_tag send_password_path do %> 
@@ -99,4 +70,8 @@
     	<%= submit_tag "Send text message with new password" %> </p>
   <% end %> 
 <% end %>
+</div>
+
+</div> <!-- end main div -->
+</div> <!-- end wrapper div -->
 

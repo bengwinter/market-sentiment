@@ -8,9 +8,8 @@ class FinancialHistoryDataController < ApplicationController
     @users = User.all
 
     @chart = LazyHighCharts::HighChart.new('graph') do |f|
-      f.title(:text => "Financial Market Sentiment")
       f.xAxis(:categories => FinancialHistoryData.prepare_entry_dates_for_chart, :labels => {enabled: false})
-      f.series(:name => "DIA (SPDR 1x DJIA ETF)", :yAxis => 1, :data => FinancialHistoryData.prepare_data_for_chart('dia_last'))
+      f.series(:name => "DIA (SPDR 1x DJIA ETF)", :yAxis => 1, :color => '#ff1a29', :dashStyle => 'ShortDot', :lineWidth => 3, :marker => {:symbol => 'triangle-down'}, :data => FinancialHistoryData.prepare_data_for_chart('dia_last'))
       f.series(:name => "Investor Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_investor_data_for_chart)
       f.series(:name => "Media Sentiment", :yAxis => 0, :data => FinancialHistoryData.prepare_media_data_for_chart)
       f.series(:type=> 'pie',:name=> "Today's Sentiment Breakdown", 
@@ -26,8 +25,8 @@ class FinancialHistoryDataController < ApplicationController
         {:title => {:text => "DIA Market Price", :margin => 20}}
       ]
 
-      f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-      f.chart({:defaultSeriesType=>"line"})
+      f.legend(:enabled => false)
+      f.chart({:defaultSeriesType=>"line", :marginLeft => 150, :marginRight => 150})
     end
 
   end
