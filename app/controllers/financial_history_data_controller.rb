@@ -1,5 +1,4 @@
 class FinancialHistoryDataController < ApplicationController
-  # before_action :set_financial_history_data, only: [:show, :edit, :update, :destroy]
 
   # GET /financial_history_data
   def index
@@ -10,9 +9,9 @@ class FinancialHistoryDataController < ApplicationController
     @chart = LazyHighCharts::HighChart.new('graph') do |f|
       f.chart(:style => {color: '#666', fontFamily: 'Roboto', fontSize: '12px', fontWeight: '100', letterSpacing: '2px'})
       f.xAxis(:categories => FinancialHistoryData.prepare_entry_dates_for_chart, :labels => {enabled: false})
-      f.series(:name => "DIA (SPDR 1x DJIA ETF)", :yAxis => 1, :color => '#777', :dashStyle => 'ShortDot', :lineWidth => 2, :marker => {:symbol => 'triangle-down', :radius => 3}, :data => FinancialHistoryData.prepare_data_for_chart('dia_last'))
-      f.series(:name => "Investor Sentiment", :yAxis => 0, :color => '#3487FF', :dashStyle => 'ShortDot', :lineWidth => 2, :marker => {:symbol => 'triangle-down', :radius => 3}, :data => FinancialHistoryData.prepare_investor_data_for_chart)
-      f.series(:name => "Media Sentiment", :yAxis => 0, :color => '#ff1a29', :dashStyle => 'ShortDot', :lineWidth => 2, :marker => {:symbol => 'triangle-down', :radius => 3}, :data => FinancialHistoryData.prepare_media_data_for_chart)
+      f.series(:name => "DIA (SPDR 1x DJIA ETF)", :yAxis => 1, :color => '#777', :dashStyle => 'ShortDot', :lineWidth => 2, :marker => {:symbol => 'triangle-down', :radius => 2}, :data => FinancialHistoryData.prepare_data_for_chart('dia_last'))
+      f.series(:name => "Investor Sentiment", :yAxis => 0, :color => '#3487FF', :dashStyle => 'ShortDot', :lineWidth => 2, :marker => {:symbol => 'triangle-down', :radius => 2}, :data => FinancialHistoryData.prepare_investor_data_for_chart)
+      f.series(:name => "Media Sentiment", :yAxis => 0, :color => '#ff1a29', :dashStyle => 'ShortDot', :lineWidth => 2, :marker => {:symbol => 'triangle-down', :radius => 2}, :data => FinancialHistoryData.prepare_media_data_for_chart)
       # f.series(:type=> 'pie',:name=> "Today's Sentiment Breakdown", 
       #       :data=> [
       #         {:name=> 'Positive', :y=> FinancialHistoryData.prepare_count_data_for_pie_chart[:positive], :color=> 'green'}, 
