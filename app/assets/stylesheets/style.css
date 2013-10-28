@@ -7,7 +7,25 @@ body{
 
 #main{ width: 960px; margin: 0 auto; background: #fff; border: 1px solid #ccc; }
 
-.section{ padding: 0px; }
+.section { padding: 0px; }
+
+.errors {
+	width: 920px;
+	height: auto;
+	background-color: #ff1a29;
+	vertical-align: center;
+	text-align: left;
+	font-family: 'Roboto';
+	font-size: 14px;
+	color: #EEE;
+	font-weight: 500;
+	text-transform: uppercase;
+	padding: 0px 20px;
+}
+
+.error {
+	padding: 10px 0px 10px 0px;
+}
 
 #picture {
 	background-image: url(http://s3-us-west-2.amazonaws.com/sentimyzer/crowd_pic.jpg);
@@ -119,18 +137,6 @@ label {
 	color: #000;
 }
 
-button {
-	color: #000;
-	background: #FF6600;
-	border: 2px outset #FF6600;
-	font-family: verdana;
-	font-weight: bold;
-	text-align: left;
-	font-size: 14px;
-	display: inline-block;
-	margin: 0px;
-}
-
 h1 {
 	font-family: Lobster;
 	text-align: center;
@@ -213,3 +219,90 @@ a {
 	background:#ff1a29;
 	margin: 20px auto;
 }
+
+
+.footer {
+	width: 960px;
+	margin: 0 auto;
+	text-align: center;
+	background-color: #ff1a29;
+}
+
+.footer input {
+	font-family: Roboto;
+	font-size: 14px;
+	text-align: center;
+	font-weight: 100;
+	margin: 1px 2px;
+	color: #666;
+	background: #EEE;
+	border: 0px;
+	width: 125px;
+	padding: 10px;
+}
+
+.footer input[type="submit"] {
+	width: auto;
+	font-size: 14px;
+	background-color: #EEE;
+	font-weight: 500;
+	color: #ff1a29;
+	border-radius: 0px;
+	border: 1px;
+	margin-left: 2px;
+	text-transform: lowercase;
+}
+
+.footer-half {
+	width: 40%;
+	display: inline-block;
+	vertical-align: top;
+	text-align: left;
+	padding: 10px 40px;
+}
+
+.footer-half h1 {
+	line-height: 50px;
+	font-family: "Roboto";
+	font-weight: 400;
+	color: #EEE;
+	text-transform: uppercase;
+	font-size: 20px;
+	text-align: center;
+	letter-spacing: 5px;
+}
+
+.footer-half p {
+	text-align: justify;
+	font-family: 'Roboto';
+	font-size: 12px;
+	color: #EEE;
+	font-weight: 300;
+	margin: 0px 0px 0px 5px;
+	letter-spacing: 1px;
+	word-spacing: 0px;
+	overflow: hidden;
+}
+
+.footer-half img {
+	border: 1px solid white;
+	float: left;
+	margin: 0px 15px 15px 0px;
+}
+
+.button {
+	width: auto;
+	padding: 10px;
+	font-family: Roboto;
+	font-size: 14px;
+	font-weight: 400;
+	vertical-align: middle;
+	height: auto;
+	text-align: center;
+	text-transform: lowercase;
+	display: inline-block;
+	color: #ff1a29;
+	background-color: #EEE;
+}
+
+

@@ -6,11 +6,15 @@
 <div class="headerspace"></div>
 
 <!-- errors -->
+<div class="errors">
 <% flash.each do |name, msg| %>
+	<div id="error">
 	<%= 
 	content_tag :div, msg, :id => "flash#{name}" 
 	%>
+	</div>
 <% end %>
+</div>
 
 <div class="section">
 <div id="picture">
@@ -27,20 +31,67 @@
 	<div class="line-separator"></div>
 	<table width="95%" align="center"><tr>
 	<tr>
-	<td width="33%"><h6>INVESTOR</h6></td>
-	<td width="33%"><h6>MEDIA</h6></td>
-	<td width="33%"><h6>DOW JONES</h6></td>
+	<td width="33%">
+	<% if @day_change[:investor].to_i > 0 %>
+	<h6><font color="green">Investor</font></h6>
+	<% elsif @day_change[:investor].to_i < 0 %>
+	<h6><font color="#ff1a29">Investor</font></h6>	
+	<% else %>
+	<h6><font color="#666">Investor</font></h6>	
+	<% end %>
+	</td>
+
+	<td width="33%">
+	<% if @day_change[:media].to_i > 0 %>
+	<h6><font color="green">Media</font></h6>
+	<% elsif @day_change[:media].to_i < 0 %>
+	<h6><font color="#ff1a29">Media</font></h6>	
+	<% else %>
+	<h6><font color="#666">Media</font></h6>	
+	<% end %>
+	</td>
+
+	<td width="33%">
+	<% if @day_change[:dia].to_i > 0 %>
+	<h6><font color="green">Dow Jones</font></h6>
+	<% elsif @day_change[:dia].to_i < 0 %>
+	<h6><font color="#ff1a29">Dow Jones</font></h6>	
+	<% else %>
+	<h6><font color="#666">Dow Jones</font></h6>	
+	<% end %>
+	</td>
 	</tr>
 	<tr>
 	<td width="33%">
-	<h5><%= @day_change[:investor] %>%</h5>
+	<% if @day_change[:investor].to_i > 0 %>
+	<h5><font color="green"><%= @day_change[:investor] %>%</font></h5>
+	<% elsif @day_change[:investor].to_i < 0 %>
+	<h5><font color="#ff1a29"><%= @day_change[:investor] %>%</font></h5>
+	<% else %>
+	<h5><font color="#666"><%= @day_change[:investor] %>%</font></h5>
+	<% end %>
 	</td>
+
 	<td width="33%">
-	<h5><%= @day_change[:media] %>%</h5>
+	<% if @day_change[:media].to_i > 0 %>
+	<h5><font color="green"><%= @day_change[:media] %>%</font></h5>
+	<% elsif @day_change[:media].to_i < 0 %>
+	<h5><font color="#ff1a29"><%= @day_change[:media] %>%</font></h5>
+	<% else %>
+	<h5><font color="#666"><%= @day_change[:media] %>%</font></h5>
+	<% end %>
 	</td>
+
 	<td width="33%">
-	<h5><%= @day_change[:dia] %>%</h5>
+	<% if @day_change[:dia].to_i > 0 %>
+	<h5><font color="green"><%= @day_change[:dia] %>%</font></h5>
+	<% elsif @day_change[:dia].to_i < 0 %>
+	<h5><font color="#ff1a29"><%= @day_change[:dia] %>%</font></h5>
+	<% else %>
+	<h5><font color="#666"><%= @day_change[:dia] %>%</font></h5>
+	<% end %>
 	</td>
+
 	</tr></table>
 </div>
 
@@ -122,23 +173,59 @@
 
 </div> <!-- end main div -->
 
-<% if !current_user %>
+<!-- footer -->
+<div class="footer">
 <div class="section">
-<br/><br/>
-<h3>Forgot Password</h3>
-  <%= form_tag send_password_path do %> 
-    <p>
-    	<%= label_tag :phone_number %>
-    	<%= text_field_tag :phone_number %>
-    	<%= submit_tag "Send text message with new password" %> </p>
-  <% end %> 
 
+<% if current_user %>
+<br/><p>
+ <h4>Logged in as <%= current_user.phone_number %></h4>
+
+       <div class="button"><%= link_to "Log out", log_out_path %></div>&nbsp;
+      <div class="button"><%= link_to "Unsubscribe", delete_user_path %></div>&nbsp;
+     <div class="button"><%= link_to "Change Password", new_password_path %></div>
+</p>
 <% else %>
-<div class="headerspace"></div>
-<div class="headerspace"></div>
+	<div class="footer-half">
+	<h1>About Me</h1>
+	<table><tr>
+	<td valign="top">
+	<p><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/blake.jpg" width="125px">
+	</p>
+	<td valign="top">
+	<p>
+	Full-stack web engineering student at General Assembly Boston.  18 years old.  Taking time off from college to figure out the next big thing in my life. Runner, lover of all things water and summer.<br/><br/>
+	<strong>Follow me @blakeruddock</strong></p>
+	</td></tr></table>
+	</div>
+
+	<div class="footer-half">
+	<h1>Login</h1>
+	  <%= form_tag sessions_path do %> 
+	        <%= text_field_tag :phone_number, nil, placeholder: 'phone number' %>
+	        <%= password_field_tag :password, nil, placeholder: 'password' %>
+	        <%= submit_tag "Log In" %>
+	   <% end %> 
+	   <br/>
+	  <%= form_tag send_password_path do %> 
+	    	<%= text_field_tag :phone_number, nil, placeholder: 'phone number' %>
+	    	<%= submit_tag "Send new password" %>
+	  <% end %> 
+	
+	  </div>
+
 <% end %>
+<div class="headerspace"></div>
+
+</div>
 </div>
 
 
 </div> <!-- end wrapper div -->
+
+
+  
+
+      
+      
 
