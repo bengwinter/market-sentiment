@@ -13,13 +13,6 @@ class FinancialHistoryDataController < ApplicationController
       f.series(:name => "DIA (SPDR 1x DJIA ETF)", :yAxis => 1, :color => '#777', :dashStyle => 'ShortDot', :lineWidth => 2, :marker => {:symbol => 'triangle-down', :radius => 3}, :data => FinancialHistoryData.prepare_data_for_chart('dia_last'))
       f.series(:name => "Investor Sentiment", :yAxis => 0, :color => '#3487FF', :dashStyle => 'ShortDot', :lineWidth => 2, :marker => {:symbol => 'triangle-down', :radius => 3}, :data => FinancialHistoryData.prepare_investor_data_for_chart)
       f.series(:name => "Media Sentiment", :yAxis => 0, :color => '#ff1a29', :dashStyle => 'ShortDot', :lineWidth => 2, :marker => {:symbol => 'triangle-down', :radius => 3}, :data => FinancialHistoryData.prepare_media_data_for_chart)
-      # f.series(:type=> 'pie',:name=> "Today's Sentiment Breakdown", 
-      #       :data=> [
-      #         {:name=> 'Positive', :y=> FinancialHistoryData.prepare_count_data_for_pie_chart[:positive], :color=> 'green'}, 
-      #         {:name=> 'Neutral', :y=> FinancialHistoryData.prepare_count_data_for_pie_chart[:neutral], :color=> 'gray'},
-      #         {:name=> 'Negative', :y=> FinancialHistoryData.prepare_count_data_for_pie_chart[:negative], :color=> 'red'}
-      #       ],
-      #       :center=> [80,10], :size=> 100, :showInLegend=> false)
 
       f.yAxis [
         { :title => {:text => "Raw Sentiment Score", :margin => 20, :margin => 30, :style => {:color => '#666', :font_family => 'Roboto', :font_size => '14px', :font_weight => '400', :letter_spacing => '2px'}}, :lineWidth => 1, :lineColor => '#ff1a29', :opposite => true, :gridLineColor => '#EEE', :showFirstLabel => false, :tickPixelInterval => 75, :labels => {:style => {:color => '#666', :font_family => 'Roboto', :font_size => '12px', :font_weight => '300', :letter_spacing => '1px'}}, :offset => 20, :tickLength => 10, :tickWidth => 1, :tickColor => '#ff1a29', :tickPosition => 'inside'},
@@ -36,6 +29,39 @@ class FinancialHistoryDataController < ApplicationController
 
       f.tooltip(:style => {fontFamily: 'Roboto'}, :shared => true, :valueDecimals => 2)
     end
+
+
+      @chart2 = LazyHighCharts::HighChart.new('pie') do |f|
+        f.chart({:defaultSeriesType=>"pie" , :margin=> [50, 60, 0, 60]} )
+        series = {
+         :type=> 'pie',
+         :name=> 'Sentiment Breakdown',
+         :data=> [
+                {:name=> 'Positive', :y=> FinancialHistoryData.prepare_count_data_for_pie_chart[:positive], :color=> 'green'}, 
+                {:name=> 'Neutral', :y=> FinancialHistoryData.prepare_count_data_for_pie_chart[:neutral], :color=> '#CCC'},
+                {:name=> 'Negative', :y=> FinancialHistoryData.prepare_count_data_for_pie_chart[:negative], :color=> '#ff1a29'}
+              ]}
+      f.series(series)
+      f.tooltip(:style => {font_family: 'Roboto', font_size: 14, color: '#333'}, :shared => true, :valueDecimals => 2)
+      f.plot_options( :pie => {
+        :allowPointSelect => true, 
+        :cursor => "pointer", 
+        :dataLabels => {
+          :enabled => true,
+          :distance => 60,
+          :connectorPadding => 20,
+          :style => {
+            :font_size => 16,
+            :font_family => 'Roboto',
+            :font_weight => 300,
+            :color => '#666',
+            :letter_spacing => '1px',
+            :text_transform => 'uppercase',
+          }
+        }
+         })
+      end
+
 
   end
 
