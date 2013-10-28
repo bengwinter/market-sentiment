@@ -178,13 +178,29 @@
 <div class="section">
 
 <% if current_user %>
-<br/><p>
- <h4>Logged in as <%= current_user.phone_number %></h4>
+	<div class="footer-half">
+	<h1>About Me</h1>
+	<table><tr>
+	<td valign="top">
+	<p><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/blake.jpg" width="125px">
+	</p>
+	<td valign="top">
+	<p>
+	Full-stack web engineering student at General Assembly Boston.  18 years old.  Taking time off from college to figure out the next big thing in my life. Runner, lover of all things water and summer.<br/><br/>
+	<strong>Follow me @blakeruddock</strong></p>
+	</td></tr></table>
+	</div>
 
-       <div class="button"><%= link_to "Log out", log_out_path %></div>&nbsp;
+	<div class="footer-half">
+	<div align="center">
+	<h1>My Account</h1>
+	<h2>Logged in as <%= current_user.phone_number %></h2>
+	  <div class="button"><%= link_to "Log out", log_out_path %></div>&nbsp;
       <div class="button"><%= link_to "Unsubscribe", delete_user_path %></div>&nbsp;
      <div class="button"><%= link_to "Change Password", new_password_path %></div>
-</p>
+	</div>
+	  </div>
+
 <% else %>
 	<div class="footer-half">
 	<h1>About Me</h1>
