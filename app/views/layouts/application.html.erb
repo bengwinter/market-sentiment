@@ -6,8 +6,6 @@
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
   <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,700,400italic,500' rel='stylesheet' type='text/css'>
-
-  <script src="http://s3-us-west-2.amazonaws.com/sentimyzer/jquery.pagescroller.js" />
   
 
   <script type="text/javascript">
@@ -22,16 +20,7 @@
     </script>
 </head>
 <body>
-<%= render 'layouts/navbar' %>
-<div class="headerspace"></div>
 
-<% flash.each do |name, msg| %>
-	<%= 
-	content_tag :div, msg, :id => "flash#{name}" 
-	%>
-<% end %>
-
-<br/>
 <%= yield %>
 
 </body>

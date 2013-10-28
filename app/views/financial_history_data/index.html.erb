@@ -1,10 +1,56 @@
+<%= render 'layouts/navbar' %>
+
 <div id="wrapper">
 <div id="main">
+
+<div class="headerspace"></div>
+
+<!-- errors -->
+<% flash.each do |name, msg| %>
+	<%= 
+	content_tag :div, msg, :id => "flash#{name}" 
+	%>
+<% end %>
+
+<div class="section">
+<div id="picture">
+</div>
+</div>
+
+
+<!-- summary section -->
+<div class="section">
+<div class="headerspace"></div>
+<div class="headerspace"></div>
+
+	<h3>24-HOUR CHANGE</h3>
+	<div class="line-separator"></div>
+	<table width="95%" align="center"><tr>
+	<tr>
+	<td width="33%"><h6>INVESTOR</h6></td>
+	<td width="33%"><h6>MEDIA</h6></td>
+	<td width="33%"><h6>DOW JONES</h6></td>
+	</tr>
+	<tr>
+	<td width="33%">
+	<h5><%= @day_change[:investor] %>%</h5>
+	</td>
+	<td width="33%">
+	<h5><%= @day_change[:media] %>%</h5>
+	</td>
+	<td width="33%">
+	<h5><%= @day_change[:dia] %>%</h5>
+	</td>
+	</tr></table>
+</div>
+
 
 <!-- chart section -->
 <div class="section">
 <div class="headerspace"></div>
 <div class="headerspace"></div>
+<h3>HISTORICAL DATA</h3>
+	<div class="line-separator"></div>
  <%= high_chart("main_chart", @chart)  %>
  </div>
 <br/>
@@ -15,8 +61,10 @@
 	<div class="signup">
 	<div class="section">
 	<div class="headerspace"></div>
+	<div class="headerspace"></div>
 	<h3>Subscribe for daily text message updates</h3>
 	<div class="line-separator"></div>
+
 	<%= form_for @user do |f| %>
 	  <% if @user.errors.any? %>
 	    <div class='error_messages'>
@@ -35,6 +83,7 @@
 	</div>
 	<% end %> 
 
+<div class="headerspace"></div>
 <div class="section">
 <div class="headerspace"></div>
 <h3>data sources</h3>
@@ -55,10 +104,11 @@
 </div>
 
 
-<br/>
-<br/><br/>
+<div class="headerspace"></div>
+<div class="headerspace"></div>
 
 
+</div> <!-- end main div -->
 
 <div class="section">
 <br/><br/>
@@ -72,6 +122,6 @@
 <% end %>
 </div>
 
-</div> <!-- end main div -->
+
 </div> <!-- end wrapper div -->
 

@@ -273,6 +273,34 @@ class FinancialHistoryData < ActiveRecord::Base
 	end
 
 
+#home page get last 24 hour data
+	def self.daily_change_hash
+		today = FinancialHistoryData.all.pop(8)
+		spy_open = today.first.spy_last.to_f
+		dia_open = today.first.dia_last.to_f
+		media_open = today.first.media_score.to_f
+		twitter_open = today.first.twitter_score.to_f
+		investor_open = today.first.investor_score.to_f
+		spy_close = today.last.spy_last.to_f
+		dia_close = today.last.dia_last.to_f
+		media_close = today.last.media_score.to_f
+		twitter_close = today.last.twitter_score.to_f
+		investor_close = today.last.investor_score.to_f
+		spy_change = daily_change(spy_open, spy_close)
+		dia_change = daily_change(dia_open, dia_close)
+		investor_change = ((daily_change(investor_open, investor_close) + daily_change(twitter_open, twitter_close)).to_f / 2).to_s
+		media_change = daily_change(media_open, media_close)
+		
+		day_update = Hash.new
+		day_update[:dia] = dia_change.to_f.round(1)
+		day_update[:investor] = investor_change.to_f.round(1)
+		day_update[:media] = media_change.to_f.round(1)
+
+		return day_update
+	end
+
+
+
 #sms message methods
 
 	def self.daily_change(open, close)

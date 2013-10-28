@@ -7,7 +7,12 @@ body{
 
 #main{ width: 960px; margin: 0 auto; background: #fff; border: 1px solid #ccc; }
 
-.section{ padding: 0px; min-height: 400px; }
+.section{ padding: 0px; }
+
+#picture {
+	background-image: url(http://s3-us-west-2.amazonaws.com/sentimyzer/crowd_pic.jpg);
+	height: 640px;
+}
 
 
 .navbar { 
@@ -153,30 +158,39 @@ h3 {
 }
 
 h4 {
-	font-family: verdana;
-	font-weight: normal;
-	text-align: right;
-	font-size: 12px;
-	margin: 0 10px 0 10px;
-	color: #000;
+	font-family: "Roboto";
+	font-weight: 500;
+	color: #ff1a29;
+	text-transform: uppercase;
+	font-size: 18px;
+	text-align: center;
+	letter-spacing: 5px;
+	line-height: 2px;
 }
 
 h5 {
-	font-family: verdana;
-	font-weight: strong;
-	text-align: left;
-	font-size: 12px;
-	margin: 10px;
-	color: #000;
+	font-family: "Roboto";
+	font-weight: 100;
+	color: #ff1a29;
+	text-transform: uppercase;
+	font-size: 60px;
+	text-align: center;
+	letter-spacing: 5px;
+	line-height: 0px;
+	margin-top: 0px;
+	margin-bottom: 60px;
 }
 
 h6 {
-	font-family: verdana;
-	margin-top: 0px;
-	font-weight: bold;
-	font-size: 10px;
+	font-family: "Roboto";
+	font-weight: 300;
+	color: #ff1a29;
+	text-transform: uppercase;
+	font-size: 20px;
 	text-align: center;
-	color: #000;
+	letter-spacing: 10px;
+	line-height: 0px;
+	margin-top: 40px;
 }
 
 p {
