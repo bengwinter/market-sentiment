@@ -2,25 +2,69 @@ require 'yahoo_finance'
 
 class FinancialHistoryData < ActiveRecord::Base
 
+# main sentiment calculation method
+	def self.sentiment_calculator(array)
+		Sentimental.load_defaults
+		Sentimental.threshold = 0.25
+		analyzer = Sentimental.new
+		sentiment_raw = []
+		sentiment_keys = []
+		array.each do |entry|
+			raw = analyzer.get_score entry
+			sent = analyzer.get_sentiment entry
+			sentiment_raw << raw
+			sentiment_keys << sent
+		end
+		sentiment_score = (sentiment_raw.inject(0.0) { |sum, element| sum + element } / sentiment_raw.size).round(3)
+		sentiment_count = sentiment_keys.dup_hash
+		return {:score => sentiment_score, :count => sentiment_count}
+	end
 
 # fetch and format standard xml feeds
 
 	def self.fetch_standard_xml(link)
-		article_text = []
 		link = URI(link.to_s)
-		xml = Net::HTTP.get(link)
-		xml_parse = Crack::XML.parse(xml)
-		articles = xml_parse["rss"]["channel"]["item"]
-		articles.each do |article|
-		text = article["title"].to_s + " " + article["description"].to_s
-		article_text << text
-		end
-		article_text		
+		xml = Crack::XML.parse(Net::HTTP.get(link))
+		articles = xml["rss"]["channel"]["item"]
+		return articles	
 	end
 
+	def self.organize_standard_xml(entries)
+		entry_text = []
+		entries.each do |entry|
+			entry_text << entry["title"].to_s + ". " + entry["description"].to_s
+		end
+		return entry_text
+	end
 
-#financial data methods
+	def self.scrub_entries(array)
+		scrubbed_content = []
+		array.each do |x|
+			scrubbed_content << Loofah.fragment(x).scrub!(:whitewash).to_s
+		end
+		return scrubbed_content
+	end
 
+	def self.fetch_sentiment_standard_xml(link)
+		sentiment_calculator(scrub_entries(organize_standard_xml(fetch_standard_xml(link.to_s))))
+	end
+
+# forbes real time news feed
+	def self.fetch_forbes_sentiment
+		fetch_sentiment_standard_xml('http://www.forbes.com/real-time/feed2/')
+	end
+
+# cnbc top news feed
+	def self.fetch_cnbc_sentiment
+		fetch_sentiment_standard_xml('http://www.cnbc.com/id/100003114/device/rss/rss.html')
+	end
+
+# ychart news feed
+	def self.fetch_ycharts_sentiment
+		fetch_sentiment_standard_xml('http://finance.yahoo.com/news/provider-ycharts/rss')
+	end
+
+# financial data methods
 	def self.fetch_financial_data(ticker)
 		quotes = YahooFinance.quotes([ticker], [:last_trade_price], {raw: false})
 		quotes.each do |quote|
@@ -29,15 +73,12 @@ class FinancialHistoryData < ActiveRecord::Base
 		return @last_trade_price
 	end
 
-
-#nyt methods
-
+# nyt methods
 	def self.fetch_nyt_news
 		date = Date.today.to_s.split(/-/).join
 		link_raw = 	"http://api.nytimes.com/svc/search/v2/articlesearch.json?fq=news_desk:(%22Business%22)&begin_date=" + date + "&end_date=" + date + "&api-key=dd560fd468731923ee6fcb7f2213540b:3:6136857"
 		link = URI(link_raw)
-		json = Net::HTTP.get(link)
-		json_parse = JSON.parse(json)
+		json_parse = JSON.parse(Net::HTTP.get(link))
 		articles = json_parse["response"]["docs"]
 		article_text = []
 		articles.each do |article|
@@ -48,108 +89,39 @@ class FinancialHistoryData < ActiveRecord::Base
 	end
 
 	def self.fetch_nyt_sentiment
-		sentiment_calculator(fetch_nyt_news)
+		sentiment_calculator(scrub_entries(fetch_nyt_news))
 	end
-
-
-#forbes methods
-
-	def self.fetch_forbes_sentiment
-		sentiment_calculator(fetch_standard_xml('http://www.forbes.com/real-time/feed2/'))
-	end
-
-
-# cnbc top news methods
-
-	def self.fetch_cnbc_sentiment
-		sentiment_calculator(fetch_standard_xml('http://www.cnbc.com/id/100003114/device/rss/rss.html'))
-	end
-
-
-# ychart news methods
-
-	def self.fetch_ycharts_sentiment
-		sentiment_calculator(fetch_standard_xml('http://finance.yahoo.com/news/provider-ycharts/rss'))
-	end
-
 
 #seeking alpha methods
-
-	def self.fetch_sa_feed
-		link = URI("http://seekingalpha.com/feed.xml")
-		xml = Net::HTTP.get(link)
-		xml_parse = Crack::XML.parse(xml)
-		articles = xml_parse["rss"]["channel"]["item"]
-		article_text = []
-		articles.each do |article|
-			text = article["title"].to_s + " " + article["content"].to_s
-			article_text << text
-		end 
-		return article_text
-	end
-
-
-	def self.scrub_sa_feed
-		scrubbed_articles = []
-		sa_feed = fetch_sa_feed
-		sa_feed.each do |article|
-			scrubbed_text = Loofah.fragment(article).scrub!(:whitewash).to_s
-			scrubbed_articles << scrubbed_text
+	def self.fetch_scrubbed_sa_feed
+		entry_text = []
+		entries = fetch_standard_xml("http://seekingalpha.com/feed.xml")
+		entries.each do |entry|
+			entry_text << entry["title"].to_s + ". " + entry["content"].to_s
 		end
-		return scrubbed_articles
+		return scrub_entries(entry_text)
 	end
 
 	def self.fetch_sa_sentiment
-		sentiment_calculator(scrub_sa_feed)
+		sentiment_calculator(fetch_scrubbed_sa_feed)
 	end
 
-
-
-#twitter methods
-
-	def self.twitter_fetch_tweets
-		client = Twitter::REST::Client.new do |config|
-		  config.consumer_key        = ENV['TWITTER_KEY']
-		  config.consumer_secret     = ENV['TWITTER_SECRET']
-		  config.access_token        = ENV['TWITTER_TOKEN']
-		  config.access_token_secret = ENV['TWITTER_TOKEN_SECRET']
-		end
+#twitter fetch, scrub, and analysis
+	def self.fetch_tweets
 		djia_hashtags = '$AXP OR $BA OR $CAT OR $CSCO OR $CVX OR $DD OR $DIS OR $GE OR $GS OR $HD OR $IBM OR $INTC OR $JNJ OR $JPM OR $KO OR $MCD OR $MMM OR $MRK OR $MSFT OR $NKE OR $PFE OR $PG OR $T OR $TRV OR $UNH OR $UTX OR $V OR $VZ OR $WMT OR $XOM'
 		tweets_array = []
-		tweets = client.search(djia_hashtags, :count => 100, :lang => "en", :result_type => "recent").collect do |tweet|
+		tweets = $twitter_client.search(djia_hashtags, :count => 100, :lang => "en", :result_type => "recent").collect do |tweet|
   			tweets_array << tweet.text.to_s
-  		end
+  	end
   	return tweets_array
 	end
 
 	def self.fetch_tweet_sentiment
-		sentiment_calculator(twitter_fetch_tweets)
+		sentiment_calculator(scrub_entries(fetch_tweets))
 	end
 
-
-#sentiment calculator
-
-	def self.sentiment_calculator(array)
-		Sentimental.load_defaults
-		Sentimental.threshold = 0.25
-		analyzer = Sentimental.new
-		sentiment_raw = []
-		sentiment = []
-		array.each do |entry|
-			raw = analyzer.get_score entry
-			sent = analyzer.get_sentiment entry
-			sentiment_raw << raw
-			sentiment << sent
-		end
-		sentiment_score = (sentiment_raw.inject(0.0) { |sum, element| sum + element } / sentiment.size).round(3)
-		sentiment_count = sentiment.dup_hash
-		{:score => sentiment_score, :count => sentiment_count}
-	end
-
-
-
-#aggregate data and update database with sentiment
-
+# collect data and update database with sentiment
+# still needs drying up ----------------------------------------
 	def self.fetch_media_sentiment
 		ycharts = fetch_ycharts_sentiment[:score].to_f
 		cnbc = fetch_cnbc_sentiment[:score].to_f
@@ -158,38 +130,43 @@ class FinancialHistoryData < ActiveRecord::Base
 		return ((ycharts + cnbc + forbes + nyt) / 4).round(3)
 	end
 
-
 	def self.update_database
+		#fetch seeking alpha data
 		sa_sent = fetch_sa_sentiment
 		sa_sent_score = sa_sent[:score].to_f
 		sa_pos = sa_sent[:count][:positive].to_f
 		sa_neu = sa_sent[:count][:neutral].to_f
 		sa_neg = sa_sent[:count][:negative].to_f
 
+		#fetch tweet data
 		tweet_sent = fetch_tweet_sentiment
 		tweet_sent_score = tweet_sent[:score].to_f
 		tweet_pos = tweet_sent[:count][:positive].to_f
 		tweet_neu = tweet_sent[:count][:neutral].to_f
 		tweet_neg = tweet_sent[:count][:negative].to_f
 
+		#fetch cnbc data
 		cnbc_sent = fetch_cnbc_sentiment
 		cnbc_sent_score = cnbc_sent[:score].to_f
 		cnbc_pos = cnbc_sent[:count][:positive].to_f
 		cnbc_neu = cnbc_sent[:count][:neutral].to_f
 		cnbc_neg = cnbc_sent[:count][:negative].to_f
 
+		#fetch ycharts data
 		ycharts_sent = fetch_ycharts_sentiment
 		ycharts_sent_score = ycharts_sent[:score].to_f
 		ycharts_pos = ycharts_sent[:count][:positive].to_f
 		ycharts_neu = ycharts_sent[:count][:neutral].to_f
 		ycharts_neg = ycharts_sent[:count][:negative].to_f
 
+		#fetch forbes data
 		forbes_sent = fetch_forbes_sentiment
 		forbes_sent_score = forbes_sent[:score].to_f
 		forbes_pos = forbes_sent[:count][:positive].to_f
 		forbes_neu = forbes_sent[:count][:neutral].to_f
 		forbes_neg = forbes_sent[:count][:negative].to_f
 
+		#fetch nyt data
 		nyt_sent = fetch_nyt_sentiment
 		nyt_sent_score = nyt_sent[:score].to_f
 		nyt_pos = nyt_sent[:count][:positive].to_f
