@@ -12,3 +12,12 @@ task :daily_message => :environment do
         FinancialHistoryData.send_sms_update
   puts "finished sending SMS messages."
 end
+
+
+desc "Ping URL every 15 minutes to keep heroku server awake"
+task :url_ping do
+	puts "Pinging http://www.sentimyzer.com..."
+    uri = URI('http://www.sentimyzer.com')
+    Net::HTTP.get_response(uri)
+  puts "Finished pinging url"
+end
