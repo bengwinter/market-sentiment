@@ -34,9 +34,6 @@ gem 'yahoo-finance'
 # include twilio ruby for text message interface
 gem 'twilio-ruby'
 
-# mccandlish to access nytimes data
-gem 'mccandlish'
-
 #sentimental for text sentiment analysis
 gem 'sentimental', github: '7compass/sentimental'
 
