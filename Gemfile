@@ -43,6 +43,9 @@ gem 'dotenv-rails'
 # improve heroku deployment
 gem 'rails_12factor'
 
+# include new relic gem
+gem 'newrelic_rpm'
+
 # include gumby-dependent gems
 gem 'compass'
 gem 'modular-scale' 
