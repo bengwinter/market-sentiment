@@ -192,7 +192,7 @@ class FinancialHistoryData < ActiveRecord::Base
 		big_decimal_array = FinancialHistoryData.select(key.to_sym).map(&key.to_sym) 
 		float_array = []
 		big_decimal_array.each do |entry|
-			float_array << entry.to_f.round(3)
+			float_array << entry.to_f.round(2)
 		end
 		float_array
 	end
@@ -228,12 +228,12 @@ class FinancialHistoryData < ActiveRecord::Base
 
 
 	def self.prepare_entry_dates_for_chart
-		times_data = FinancialHistoryData.select(:created_at).map(&:created_at) 
-		times_array = []
-		times_data.each do |entry|
-			times_array << entry.strftime("%m-%d-%Y, %I:%M%p")
+		time_data = FinancialHistoryData.select(:created_at).map(&:created_at) 
+		time_array = []
+		time_data.each do |entry|
+			time_array << entry.strftime("%m-%d-%Y, %I:%M%p")
 		end
-		return times_array
+		return time_array
 	end
 
 
@@ -250,69 +250,34 @@ class FinancialHistoryData < ActiveRecord::Base
 	end
 
 
-#home page get last 24 hour data
-	def self.daily_change_hash
-		today = FinancialHistoryData.all.pop(8)
-		spy_open = today.first.spy_last.to_f
-		dia_open = today.first.dia_last.to_f
-		media_open = today.first.media_score.to_f
-		twitter_open = today.first.twitter_score.to_f
-		investor_open = today.first.investor_score.to_f
-		spy_close = today.last.spy_last.to_f
-		dia_close = today.last.dia_last.to_f
-		media_close = today.last.media_score.to_f
-		twitter_close = today.last.twitter_score.to_f
-		investor_close = today.last.investor_score.to_f
-		spy_change = daily_change(spy_open, spy_close)
-		dia_change = daily_change(dia_open, dia_close)
-		investor_change = ((daily_change(investor_open, investor_close) + daily_change(twitter_open, twitter_close)).to_f / 2).to_s
-		media_change = daily_change(media_open, media_close)
-		
-		day_update = Hash.new
-		day_update[:dia] = dia_change.to_f.round(1)
-		day_update[:investor] = investor_change.to_f.round(1)
-		day_update[:media] = media_change.to_f.round(1)
-
-		return day_update
-	end
-
-
-
-#sms message methods
-
 	def self.daily_change(open, close)
 		(((close - open) / open) * 100).round(2).to_s
 	end
 
 
-	def self.build_message_body
+#home page get last 24 hour data
+	def self.daily_change_hash
 		today = FinancialHistoryData.all.pop(8)
-		spy_open = today.first.spy_last.to_f
-		dia_open = today.first.dia_last.to_f
-		media_open = today.first.media_score.to_f
-		twitter_open = today.first.twitter_score.to_f
-		investor_open = today.first.investor_score.to_f
-		spy_close = today.last.spy_last.to_f
-		dia_close = today.last.dia_last.to_f
-		media_close = today.last.media_score.to_f
-		twitter_close = today.last.twitter_score.to_f
-		investor_close = today.last.investor_score.to_f
-		spy_change = daily_change(spy_open, spy_close)
-		dia_change = daily_change(dia_open, dia_close)
-		investor_change = ((daily_change(investor_open, investor_close) + daily_change(twitter_open, twitter_close)).to_f / 2).to_s
-		media_change = daily_change(media_open, media_close)
+		daily_update = Hash.new
+		daily_update[:dia] = daily_change(today.first.dia_last.to_f, today.last.dia_last.to_f).to_f.round(1)
+		daily_update[:media] = daily_change(today.first.media_score.to_f, today.last.media_score.to_f).to_f.round(1)
+		daily_update[:investor] = ((daily_change(today.first.investor_score.to_f, today.last.investor_score.to_f) + daily_change(today.first.twitter_score.to_f, today.last.twitter_score.to_f)).to_f / 2).to_f.round(1)
+		return daily_update
+	end
 
-		text_body = 'Sentimyzer daily update: DIA: ' + dia_change + '%, Investor: ' + investor_change + '%, Media: ' + media_change + '%'
-		
+#sms message methods
+
+	def self.build_message_body
+		today_change = daily_change_hash
+		text_body = 'Sentimyzer daily update: DIA: ' + today_change[:dia].to_s + '%, Investor: ' + today_change[:investor].to_s + '%, Media: ' + today_change[:media].to_s + '%'
 		return text_body
 	end
 
 
 	def self.send_sms_update
-		client = Twilio::REST::Client.new ENV['TWILIO_ID'], ENV['TWILIO_TOKEN']
   		phone_numbers = User.where(verified: true).pluck(:phone_number)
   		phone_numbers.each do |phone_number|
-	  		client.account.messages.create(
+	  		$twilio_client.account.messages.create(
 	        :from => '+16175443662',
 	        :to => phone_number,
 	       :body => build_message_body
