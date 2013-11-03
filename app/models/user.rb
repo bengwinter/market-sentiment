@@ -42,4 +42,12 @@ class User < ActiveRecord::Base
 		end
 	end
 
+
+	def self.send_text(sender, recipient, body)
+		$twilio_client.account.messages.create(
+			:from => sender.to_s,
+			:to => recipient.to_s,
+			:body => body.to_s)
+	end
+
 end
