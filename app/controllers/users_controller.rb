@@ -22,7 +22,6 @@ class UsersController < ApplicationController
 		sender = params[:From].to_s
 		body = params[:Body].to_s.downcase
 		@user = User.find_by_phone_number(sender)
-
 		if @user
 			if body == 'yes'
 				@user.update(verified: true)
@@ -35,31 +34,13 @@ class UsersController < ApplicationController
 		end
 	end
 
-	# update a user profile 
-	# code may be unused --- check this. 
-	# def update
-	#   	user_id = current_user.id
-	#   	@user = User.find(user_id)
-
-	#     respond_to do |format|
-	#       if @user.update(user_params)
-	#         format.html { render action: 'show' , notice: 'Your profile was successfully updated.' }
-	#       else
-	#         format.html { render action: 'edit' }
-	#       end
-	#     end
-	# end
-
-	 
 	def destroy
 		user_id = current_user.id
     	user = User.find(user_id)
     	session[:user_id] = nil
     	user.destroy
-
     	redirect_to root_url, notice: 'You were successfully unsubscribed from our alert list'
   end
-
 
 	# send password to user who forgets or wants to reset password
 	def send_password
@@ -81,7 +62,6 @@ class UsersController < ApplicationController
 		sender = params[:From].to_s
 		body = params[:Body].to_s		
 		@user = User.find_by_phone_number(sender)
-
 		if @user
 			@user.update(password: body)
 			if @user.save!
@@ -94,12 +74,10 @@ class UsersController < ApplicationController
 		end
 	end
   
-
   private
 
   def user_params
   	params.require(:user).permit(:email, :phone_number, :password, :password_confirmation)
   end
-
 
 end
