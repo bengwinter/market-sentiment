@@ -152,15 +152,13 @@ class FinancialHistoryData < ActiveRecord::Base
 			negative_proportions << value[:negative]
 		end
 
-		positive_proportion = (positive_proportions.compact.inject(0.0) { |sum, element| sum + element } / positive_proportions.compact.length).to_f.round(3)
-		neutral_proportion = (neutral_proportions.compact.inject(0.0) { |sum, element| sum + element } / neutral_proportions.compact.length).to_f.round(3)
-		negative_proportion = (negative_proportions.compact.inject(0.0) { |sum, element| sum + element } / negative_proportions.compact.length).to_f.round(3)
+		positive_proportion = (positive_proportions.compact.inject(0.0) { |sum, element| sum + element } / positive_proportions.compact.length).round(3)
+		neutral_proportion = (neutral_proportions.compact.inject(0.0) { |sum, element| sum + element } / neutral_proportions.compact.length).round(3)
+		negative_proportion = (negative_proportions.compact.inject(0.0) { |sum, element| sum + element } / negative_proportions.compact.length).round(3)
 
 		date = DateTime.now.utc.in_time_zone('Eastern Time (US & Canada)').to_s
 
-		binding.pry
-
-		self.create(date: date, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment[:score], media_score: media_sentiment_score, investor_score: fetch_sa_sentiment[:score], positive_entries: positive_proportion, neutral_entries: neutral_proportion, negative_entries: negative_proportion)
+		entry = self.new(date: date, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment[:score], media_score: media_sentiment_score, investor_score: fetch_sa_sentiment[:score], positive_entries: positive_proportion, neutral_entries: neutral_proportion, negative_entries: negative_proportion)
 	end
 
 
