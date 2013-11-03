@@ -60,7 +60,6 @@ class UsersController < ApplicationController
     	redirect_to root_url, notice: 'You were successfully unsubscribed from our alert list'
   end
 
-				User.send_text('+16175443662', sender, "Thank you! We've verified your number and added you to the Sentimyzer update list")
 
 	# send password to user who forgets or wants to reset password
 	def send_password
