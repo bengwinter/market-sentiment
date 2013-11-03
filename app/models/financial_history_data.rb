@@ -158,7 +158,7 @@ class FinancialHistoryData < ActiveRecord::Base
 
 		date = DateTime.now.utc.in_time_zone('Eastern Time (US & Canada)').to_s
 
-		entry = self.new(date: date, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment[:score], media_score: media_sentiment_score, investor_score: fetch_sa_sentiment[:score], positive_entries: positive_proportion, neutral_entries: neutral_proportion, negative_entries: negative_proportion)
+		self.create(date: date, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment[:score], media_score: media_sentiment_score, investor_score: fetch_sa_sentiment[:score], positive_entries: positive_proportion, neutral_entries: neutral_proportion, negative_entries: negative_proportion)
 	end
 
 
