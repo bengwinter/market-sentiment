@@ -120,6 +120,10 @@ class FinancialHistoryData < ActiveRecord::Base
 		return (media.inject(0.0) { |sum, element| sum + element } / media.length).round(3)
 	end
 
+	def self.proportion_calculator(array)
+		(array.compact.inject(0.0) { |sum, element| sum + element } / array.compact.length).round(3)
+	end
+
 	def self.update_database
 		media_sources = ['cnbc', 'ycharts', 'forbes', 'nyt']
 		media_data = Hash.new
@@ -152,19 +156,17 @@ class FinancialHistoryData < ActiveRecord::Base
 			negative_proportions << value[:negative]
 		end
 
-		positive_proportion = (positive_proportions.compact.inject(0.0) { |sum, element| sum + element } / positive_proportions.compact.length).round(3)
-		neutral_proportion = (neutral_proportions.compact.inject(0.0) { |sum, element| sum + element } / neutral_proportions.compact.length).round(3)
-		negative_proportion = (negative_proportions.compact.inject(0.0) { |sum, element| sum + element } / negative_proportions.compact.length).round(3)
+		positive_proportion = proportion_calculator(positive_proportions)
+		neutral_proportion = proportion_calculator(neutral_proportions)
+		negative_proportion = proportion_calculator(negative_proportions)
 
 		date = DateTime.now.utc.in_time_zone('Eastern Time (US & Canada)').to_s
 
 		self.create(date: date, dia_last: fetch_financial_data('DIA'), spy_last: fetch_financial_data('SPY'), twitter_score: fetch_tweet_sentiment[:score], media_score: media_sentiment_score, investor_score: fetch_sa_sentiment[:score], positive_entries: positive_proportion, neutral_entries: neutral_proportion, negative_entries: negative_proportion)
 	end
 
-
 #charting methods
-
-	def self.convert_database_table_to_array_to_floats(key)
+	def self.prepare_data(key)
 		big_decimal_array = FinancialHistoryData.select(key.to_sym).map(&key.to_sym) 
 		float_array = []
 		big_decimal_array.each do |entry|
@@ -173,26 +175,13 @@ class FinancialHistoryData < ActiveRecord::Base
 		float_array
 	end
 
-
-  def self.prepare_data_for_chart(data)
-    data = FinancialHistoryData.select(data.to_sym).map(&data.to_sym) 
-    data_array = []
-    data.each do |entry|
-    	data_array << entry.to_f
-    end
-    return data_array
-	end
-
-
 	def self.prepare_media_data_for_chart
-		convert_database_table_to_array_to_floats('media_score')
+		prepare_data('media_score')
 	end
-
 
 	def self.prepare_investor_data_for_chart
-		twitter_array = convert_database_table_to_array_to_floats('twitter_score')
-		sa_array = convert_database_table_to_array_to_floats('investor_score')
-
+		twitter_array = prepare_data('twitter_score')
+		sa_array = prepare_data('investor_score')
 		investor_array = []
 		i = 0
 		twitter_array.each do |score|
@@ -201,7 +190,6 @@ class FinancialHistoryData < ActiveRecord::Base
 			i += 1
 		end
 	end
-
 
 	def self.prepare_entry_dates_for_chart
 		time_data = FinancialHistoryData.select(:created_at).map(&:created_at) 
@@ -212,26 +200,16 @@ class FinancialHistoryData < ActiveRecord::Base
 		return time_array
 	end
 
-
 	def self.prepare_count_data_for_pie_chart
 		last = FinancialHistoryData.last
-		pos = last.positive_entries.to_f
-		neu = last.neutral_entries.to_f
-		neg = last.negative_entries.to_f
-		total = pos + neu + neg
-		pos_share = (pos/total).round(3)
-		neu_share = (neu/total).round(3)
-		neg_share = (neg/total).round(3)
-		{:positive => pos_share, :neutral => neu_share, :negative => neg_share}
+		{:positive => last.positive_entries.to_f, :neutral => last.neutral_entries.to_f, :negative => last.negative_entries.to_f}
 	end
 
-
+#home page get last 24 hour data
 	def self.daily_change(open, close)
 		(((close - open) / open) * 100).round(2).to_s
 	end
 
-
-#home page get last 24 hour data
 	def self.daily_change_hash
 		today = FinancialHistoryData.all.pop(8)
 		daily_update = Hash.new
@@ -242,23 +220,17 @@ class FinancialHistoryData < ActiveRecord::Base
 	end
 
 #sms message methods
-
 	def self.build_message_body
 		today_change = daily_change_hash
 		text_body = 'Sentimyzer daily update: DIA: ' + today_change[:dia].to_s + '%, Investor: ' + today_change[:investor].to_s + '%, Media: ' + today_change[:media].to_s + '%'
 		return text_body
 	end
 
-
 	def self.send_sms_update
-  		phone_numbers = User.where(verified: true).pluck(:phone_number)
-  		phone_numbers.each do |phone_number|
-	  		$twilio_client.account.messages.create(
-	        :from => '+16175443662',
-	        :to => phone_number,
-	       :body => build_message_body
-	      )
-	  	end
+		phone_numbers = User.where(verified: true).pluck(:phone_number)
+		phone_numbers.each do |phone_number|
+			User.send_text('+16175443662', phone_number, build_message_body)
+  	end
 	end
 
 end
