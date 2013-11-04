@@ -3,12 +3,16 @@ body{
 	background-image: url('http://s3-us-west-2.amazonaws.com/sentimyzer/noisy_grid.png');
 }
 
+/*used*/
 #wrapper{ position:relative; width:100%; }
 
+/*used*/
 #main{ width: 960px; margin: 0 auto; background: #fff; border: 1px solid #ccc; }
 
+/*used*/
 .section { padding: 0px; }
 
+/*used*/
 .errors {
 	width: 920px;
 	height: auto;
@@ -23,16 +27,18 @@ body{
 	padding: 0px 20px;
 }
 
+/*used*/
 .error {
 	padding: 10px 0px 10px 0px;
 }
 
+/*used*/
 #picture {
 	background-image: url(http://s3-us-west-2.amazonaws.com/sentimyzer/crowd_pic.jpg);
 	height: 640px;
 }
 
-
+/*used*/
 .navbar { 
 	width: 100%; 
 	min-height: 50px; 
@@ -44,59 +50,35 @@ body{
 	z-index: 9999;
 	 }
 
+/*used*/
 .headerspace {
 	height: 60px;
 }
 
+/*used*/
 .datasources {
 	text-align: center;
 }
 
+/*used*/
 .datasources img {
 	margin: 30px;
 	vertical-align: middle;
 }
 
+/*used*/
 .signup {
 	text-align: center;
 	margin-top: 20px;
 }
 
-
-.container {
-	width: 800px;
-	margin: 30px auto 25px auto;
-	background-color: #f6f6ef;
-}
-
-.header {
-	width: 780px;
-	padding: 0px 10px 0px 10px;
-	background-color: #FF6600;
-}
-
-.header img{
-	margin: 0;
-	display: inline;
-	float: left;
-	border: 1px solid white;
-}
-
-.textContainer {
-	padding: 20px;
-}
-
-
+/*dry this up, designate form/list styles in relevent div tags*/
 li {
 	display: inline-block;
 }
 
 .fieldset {
 	margin-left: 20px;
-}
-
-.line-height {
-	line-height: 10px
 }
 
 input {
@@ -124,7 +106,6 @@ input[type="submit"] {
 	text-transform: lowercase;
 }
 
-
 label {
 	width: 30px;
 	float: left;
@@ -137,12 +118,14 @@ label {
 	color: #000;
 }
 
+/*UNUSED*/
 h1 {
 	font-family: Lobster;
 	text-align: center;
 	font-size: 36px;
 }
 
+/*used*/
 h2 {
 	font-family: "Roboto";
 	font-weight: 500;
@@ -153,6 +136,7 @@ h2 {
 	letter-spacing: 10px;
 }
 
+/*used*/
 h3 {
 	font-family: "Roboto";
 	font-weight: 500;
@@ -163,6 +147,7 @@ h3 {
 	letter-spacing: 5px;
 }
 
+/*UNUSED*/
 h4 {
 	font-family: "Roboto";
 	font-weight: 500;
@@ -174,6 +159,7 @@ h4 {
 	line-height: 2px;
 }
 
+/*used*/
 h5 {
 	font-family: "Roboto";
 	font-weight: 100;
@@ -187,6 +173,7 @@ h5 {
 	margin-bottom: 60px;
 }
 
+/*used*/
 h6 {
 	font-family: "Roboto";
 	font-weight: 300;
@@ -199,6 +186,7 @@ h6 {
 	margin-top: 40px;
 }
 
+/*used*/
 p {
 	font-family: verdana;
 	font-weight: normal;
@@ -208,11 +196,13 @@ p {
 	color: #000;
 }
 
+/*used*/
 a {
 	text-decoration: none;
 	color: inherit;
 }
 
+/*used*/
 .line-separator {
 	height:1px;
 	width: 200px;
@@ -220,7 +210,7 @@ a {
 	margin: 20px auto;
 }
 
-
+/*used*/
 .footer {
 	width: 960px;
 	margin: 0 auto;
@@ -228,6 +218,7 @@ a {
 	background-color: #ff1a29;
 }
 
+/*used*/
 .footer input {
 	font-family: Roboto;
 	font-size: 14px;
@@ -241,6 +232,7 @@ a {
 	padding: 10px;
 }
 
+/*used*/
 .footer input[type="submit"] {
 	width: auto;
 	font-size: 14px;
@@ -253,6 +245,7 @@ a {
 	text-transform: lowercase;
 }
 
+/*used*/
 .footer-half {
 	width: 40%;
 	display: inline-block;
@@ -261,6 +254,7 @@ a {
 	padding: 10px 40px;
 }
 
+/*used*/
 .footer-half h1 {
 	line-height: 50px;
 	font-family: "Roboto";
@@ -272,6 +266,7 @@ a {
 	letter-spacing: 5px;
 }
 
+/*used*/
 .footer-half h2 {
 	background-color: #EEE;
 	padding: 12px 0px;
@@ -285,6 +280,7 @@ a {
 	margin-bottom: 20px;
 }
 
+/*used*/
 .footer-half p {
 	text-align: justify;
 	font-family: 'Roboto';
@@ -297,12 +293,14 @@ a {
 	overflow: hidden;
 }
 
+/*used*/
 .footer-half img {
 	border: 1px solid white;
 	float: left;
 	margin: 0px 15px 15px 0px;
 }
 
+/*used*/
 .button {
 	width: auto;
 	padding: 10px;

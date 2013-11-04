@@ -1,0 +1,9 @@
+<div class="errors">
+<% flash.each do |name, msg| %>
+	<div id="error">
+	<%= 
+	content_tag :div, msg, :id => "flash#{name}" 
+	%>
+	</div>
+<% end %>
+</div>

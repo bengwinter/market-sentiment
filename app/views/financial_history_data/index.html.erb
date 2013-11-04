@@ -5,237 +5,26 @@
 
 <div class="headerspace"></div>
 
-<!-- errors -->
-<div class="errors">
-<% flash.each do |name, msg| %>
-	<div id="error">
-	<%= 
-	content_tag :div, msg, :id => "flash#{name}" 
-	%>
-	</div>
-<% end %>
-</div>
+<%= render 'layouts/errors' %>
 
-<div class="section">
-<div id="picture">
-</div>
-</div>
+<%= render 'layouts/headerpicture' %>
 
+<%= render 'layouts/summary' %>
 
-<!-- summary section -->
-<div class="section">
-<div class="headerspace"></div>
-<div class="headerspace"></div>
+<%= render 'layouts/piechart' %>
 
-	<h3>24-HOUR CHANGE</h3>
-	<div class="line-separator"></div>
-	<table width="95%" align="center"><tr>
-	<tr>
-	<td width="33%">
-	<% if @day_change[:investor].to_i > 0 %>
-	<h6><font color="green">Investor</font></h6>
-	<% elsif @day_change[:investor].to_i < 0 %>
-	<h6><font color="#ff1a29">Investor</font></h6>	
-	<% else %>
-	<h6><font color="#666">Investor</font></h6>	
-	<% end %>
-	</td>
+<%= render 'layouts/linechart' %>
 
-	<td width="33%">
-	<% if @day_change[:media].to_i > 0 %>
-	<h6><font color="green">Media</font></h6>
-	<% elsif @day_change[:media].to_i < 0 %>
-	<h6><font color="#ff1a29">Media</font></h6>	
-	<% else %>
-	<h6><font color="#666">Media</font></h6>	
-	<% end %>
-	</td>
+<%= render 'layouts/newuser' %>
 
-	<td width="33%">
-	<% if @day_change[:dia].to_i > 0 %>
-	<h6><font color="green">Dow Jones</font></h6>
-	<% elsif @day_change[:dia].to_i < 0 %>
-	<h6><font color="#ff1a29">Dow Jones</font></h6>	
-	<% else %>
-	<h6><font color="#666">Dow Jones</font></h6>	
-	<% end %>
-	</td>
-	</tr>
-	<tr>
-	<td width="33%">
-	<% if @day_change[:investor].to_i > 0 %>
-	<h5><font color="green"><%= @day_change[:investor] %>%</font></h5>
-	<% elsif @day_change[:investor].to_i < 0 %>
-	<h5><font color="#ff1a29"><%= @day_change[:investor] %>%</font></h5>
-	<% else %>
-	<h5><font color="#666"><%= @day_change[:investor] %>%</font></h5>
-	<% end %>
-	</td>
-
-	<td width="33%">
-	<% if @day_change[:media].to_i > 0 %>
-	<h5><font color="green"><%= @day_change[:media] %>%</font></h5>
-	<% elsif @day_change[:media].to_i < 0 %>
-	<h5><font color="#ff1a29"><%= @day_change[:media] %>%</font></h5>
-	<% else %>
-	<h5><font color="#666"><%= @day_change[:media] %>%</font></h5>
-	<% end %>
-	</td>
-
-	<td width="33%">
-	<% if @day_change[:dia].to_i > 0 %>
-	<h5><font color="green"><%= @day_change[:dia] %>%</font></h5>
-	<% elsif @day_change[:dia].to_i < 0 %>
-	<h5><font color="#ff1a29"><%= @day_change[:dia] %>%</font></h5>
-	<% else %>
-	<h5><font color="#666"><%= @day_change[:dia] %>%</font></h5>
-	<% end %>
-	</td>
-
-	</tr></table>
-</div>
-
-
-<!-- pie chart section -->
-<div class="section">
-<div class="headerspace"></div>
-<h3>TODAY'S SENTIMENT BREAKDOWN</h3>
-	<div class="line-separator"></div>
- <%= high_chart("pie_chart", @pie_chart)  %>
- </div>
-<br/>
-
-
-
-<!-- line chart section -->
-<div class="section">
-<div class="headerspace"></div>
-<h3>HISTORICAL DATA</h3>
-	<div class="line-separator"></div>
- <%= high_chart("line_chart", @line_chart)  %>
- </div>
-<br/>
-
-
-<!-- new user signup form -->
-
-<% if !current_user %>
-	<div class="signup">
-	<div class="section">
-	<div class="headerspace"></div>
-	<div class="headerspace"></div>
-	<h3>Subscribe for daily text message updates</h3>
-	<div class="line-separator"></div>
-
-	<%= form_for @user do |f| %>
-	  <% if @user.errors.any? %>
-	    <div class='error_messages'>
-	      <h2>Form is invalid</h2>
-	      <ul>
-	        <% @user.errors.full_messages.each do |message| %>
-	          <li><%= message %></li>
-	        <% end %>
-	      </ul>
-	  <% end %>
-
-	  <%= f.text_field :phone_number, placeholder: '617-544-3963' %>
-	  <%= f.password_field :password, placeholder: 'password' %>
-	  <%= f.submit "subscribe" %>
-	  </div>
-	</div>
-	<% end %> 
-<% end %>
-
-<div class="headerspace"></div>
-<div class="section">
-<div class="headerspace"></div>
-<h3>data sources</h3>
-<div class="line-separator"></div>
-
-<div class="datasources">
-<ul>
-	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/forbes_logo.jpg" height="35" /></li>
-	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/nyt_logo.jpg" height="35" /></li>
-	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/sa_logo.jpg" height="35" /></li>
-	<br/>
-	
-	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/cnbc_logo.jpg" height="30" /></li>
-	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/ycharts_logo.jpg" height="35" /></li>
-	<li><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/twitter_logo.jpg" height="35" /></li>
-</ul>
-</div>
-</div>
-
+<%= render 'layouts/datasources' %>
 
 <div class="headerspace"></div>
 <div class="headerspace"></div>
-
 
 </div> <!-- end main div -->
 
-<!-- footer -->
-<div class="footer">
-<div class="section">
-
-<% if current_user %>
-	<div class="footer-half">
-	<h1>About Me</h1>
-	<table><tr>
-	<td valign="top">
-	<p><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/blake.jpg" width="125px">
-	</p>
-	<td valign="top">
-	<p>
-	Full-stack web engineering student at General Assembly Boston.  18 years old.  Taking time off from college to figure out the next big thing in my life. Runner, lover of all things water and summer.<br/><br/>
-	<strong>Follow me @blakeruddock</strong></p>
-	</td></tr></table>
-	</div>
-
-	<div class="footer-half">
-	<div align="center">
-	<h1>My Account</h1>
-	<h2>Logged in as <%= current_user.phone_number %></h2>
-	  <div class="button"><%= link_to "Log out", log_out_path %></div>&nbsp;
-      <div class="button"><%= link_to "Unsubscribe", delete_user_path %></div>&nbsp;
-     <div class="button"><%= link_to "Change Password", new_password_path %></div>
-	</div>
-	  </div>
-
-<% else %>
-	<div class="footer-half">
-	<h1>About Me</h1>
-	<table><tr>
-	<td valign="top">
-	<p><img src="http://s3-us-west-2.amazonaws.com/sentimyzer/blake.jpg" width="125px">
-	</p>
-	<td valign="top">
-	<p>
-	Full-stack web engineering student at General Assembly Boston.  18 years old.  Taking time off from college to figure out the next big thing in my life. Runner, lover of all things water and summer.<br/><br/>
-	<strong>Follow me @blakeruddock</strong></p>
-	</td></tr></table>
-	</div>
-
-	<div class="footer-half">
-	<h1>Login</h1>
-	  <%= form_tag sessions_path do %> 
-	        <%= text_field_tag :phone_number, nil, placeholder: 'phone number' %>
-	        <%= password_field_tag :password, nil, placeholder: 'password' %>
-	        <%= submit_tag "Log In" %>
-	   <% end %> 
-	   <br/>
-	  <%= form_tag send_password_path do %> 
-	    	<%= text_field_tag :phone_number, nil, placeholder: 'phone number' %>
-	    	<%= submit_tag "Send new password" %>
-	  <% end %> 
-	
-	  </div>
-
-<% end %>
-<div class="headerspace"></div>
-
-</div>
-</div>
-
+<%= render 'layouts/footer' %>
 
 </div> <!-- end wrapper div -->
 
