@@ -207,7 +207,7 @@ class FinancialHistoryData < ActiveRecord::Base
 
 #home page get last 24 hour data
 	def self.daily_change(open, close)
-		(((close - open) / open) * 100).round(2).to_s
+		(((close - open) / open.abs) * 100).round(2).to_s
 	end
 
 	def self.daily_change_hash
