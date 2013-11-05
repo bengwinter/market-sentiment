@@ -1,71 +1,66 @@
 <div class="section">
-<div class="headerspace"></div>
-<div class="headerspace"></div>
-
-	<h3>24-HOUR CHANGE</h3>
+	<div class="headerspace"></div>
+	<div class="headerspace"></div>
+	<h3>24-hour change</h3>
 	<div class="line-separator"></div>
-	<table width="95%" align="center"><tr>
-	<tr>
-	<td width="33%">
-	<% if @day_change[:investor].to_i > 0 %>
-	<h6><font color="green">Investor</font></h6>
-	<% elsif @day_change[:investor].to_i < 0 %>
-	<h6><font color="#ff1a29">Investor</font></h6>	
-	<% else %>
-	<h6><font color="#666">Investor</font></h6>	
-	<% end %>
-	</td>
-
-	<td width="33%">
-	<% if @day_change[:media].to_i > 0 %>
-	<h6><font color="green">Media</font></h6>
-	<% elsif @day_change[:media].to_i < 0 %>
-	<h6><font color="#ff1a29">Media</font></h6>	
-	<% else %>
-	<h6><font color="#666">Media</font></h6>	
-	<% end %>
-	</td>
-
-	<td width="33%">
-	<% if @day_change[:dia].to_i > 0 %>
-	<h6><font color="green">Dow Jones</font></h6>
-	<% elsif @day_change[:dia].to_i < 0 %>
-	<h6><font color="#ff1a29">Dow Jones</font></h6>	
-	<% else %>
-	<h6><font color="#666">Dow Jones</font></h6>	
-	<% end %>
-	</td>
-	</tr>
-	<tr>
-	<td width="33%">
-	<% if @day_change[:investor].to_i > 0 %>
-	<h5><font color="green"><%= @day_change[:investor] %>%</font></h5>
-	<% elsif @day_change[:investor].to_i < 0 %>
-	<h5><font color="#ff1a29"><%= @day_change[:investor] %>%</font></h5>
-	<% else %>
-	<h5><font color="#666"><%= @day_change[:investor] %>%</font></h5>
-	<% end %>
-	</td>
-
-	<td width="33%">
-	<% if @day_change[:media].to_i > 0 %>
-	<h5><font color="green"><%= @day_change[:media] %>%</font></h5>
-	<% elsif @day_change[:media].to_i < 0 %>
-	<h5><font color="#ff1a29"><%= @day_change[:media] %>%</font></h5>
-	<% else %>
-	<h5><font color="#666"><%= @day_change[:media] %>%</font></h5>
-	<% end %>
-	</td>
-
-	<td width="33%">
-	<% if @day_change[:dia].to_i > 0 %>
-	<h5><font color="green"><%= @day_change[:dia] %>%</font></h5>
-	<% elsif @day_change[:dia].to_i < 0 %>
-	<h5><font color="#ff1a29"><%= @day_change[:dia] %>%</font></h5>
-	<% else %>
-	<h5><font color="#666"><%= @day_change[:dia] %>%</font></h5>
-	<% end %>
-	</td>
-
-	</tr></table>
-</div>
+	<table width="95%" align="center">
+		<tr>
+			<td width="33%">
+				<% if @day_change[:investor].to_f > 0.0 %>
+				<h6><font color="#216C2A">Investor</font></h6>
+				<% elsif @day_change[:investor].to_f < 0.0 %>
+				<h6><font color="#ff1a29">Investor</font></h6>	
+				<% else %>
+				<h6><font color="#666">Investor</font></h6>	
+				<% end %>
+			</td>
+			<td width="33%">
+				<% if @day_change[:media].to_f > 0.0 %>
+				<h6><font color="#216C2A">Media</font></h6>
+				<% elsif @day_change[:media].to_f < 0.0 %>
+				<h6><font color="#ff1a29">Media</font></h6>	
+				<% else %>
+				<h6><font color="#666">Media</font></h6>	
+				<% end %>
+			</td>
+			<td width="33%">
+				<% if @day_change[:dia].to_f > 0.0 %>
+				<h6><font color="#216C2A">Dow Jones</font></h6>
+				<% elsif @day_change[:dia].to_f < 0.0 %>
+				<h6><font color="#ff1a29">Dow Jones</font></h6>	
+				<% else %>
+				<h6><font color="#666">Dow Jones</font></h6>	
+				<% end %>
+			</td>
+		</tr>
+		<tr>
+			<td width="33%">
+				<% if @day_change[:investor].to_f > 0.0 %>
+				<h5><font color="#216C2A"><%= @day_change[:investor] %>%</font></h5>
+				<% elsif @day_change[:investor].to_f < 0.0 %>
+				<h5><font color="#ff1a29"><%= @day_change[:investor] %>%</font></h5>
+				<% else %>
+				<h5><font color="#666"><%= @day_change[:investor] %>%</font></h5>
+				<% end %>
+			</td>
+			<td width="33%">
+				<% if @day_change[:media].to_f > 0.0 %>
+				<h5><font color="#216C2A"><%= @day_change[:media] %>%</font></h5>
+				<% elsif @day_change[:media].to_f < 0.0 %>
+				<h5><font color="#ff1a29"><%= @day_change[:media] %>%</font></h5>
+				<% else %>
+				<h5><font color="#666"><%= @day_change[:media] %>%</font></h5>
+				<% end %>
+			</td>
+			<td width="33%">
+				<% if @day_change[:dia].to_f > 0.0 %>
+				<h5><font color="#216C2A"><%= @day_change[:dia] %>%</font></h5>
+				<% elsif @day_change[:dia].to_f < 0.0 %>
+				<h5><font color="#ff1a29"><%= @day_change[:dia] %>%</font></h5>
+				<% else %>
+				<h5><font color="#666"><%= @day_change[:dia] %>%</font></h5>
+				<% end %>
+			</td>
+		</tr></table>
+	</div>
+	<div class="headerspace"></div>

@@ -1,47 +1,32 @@
-/*add backup fonts to all text classes, reduce number of text classes substantially. let's get this down to < 100 lines of css code */
-
-body{ 
+body { 
 	margin: 0; 
 	background-image: url('http://s3-us-west-2.amazonaws.com/sentimyzer/noisy_grid.png');
 }
 
-/*used*/
-#wrapper{ position:relative; width:100%; }
+/* The wrapper and main ids are used by the jQuery scrolling function. The main id also structures content background on the page. */
 
-/*used*/
-#main{ width: 960px; margin: 0 auto; background: #fff; border: 1px solid #ccc; }
-
-/*used*/
-.section { padding: 0px; }
-
-/*used*/
-.errors {
-	width: 920px;
-	height: auto;
-	background-color: #ff1a29;
-	vertical-align: center;
-	text-align: left;
-	font-family: 'Roboto';
-	font-size: 14px;
-	color: #EEE;
-	font-weight: 500;
-	text-transform: uppercase;
-	padding: 0px 20px;
+#wrapper { 
+	position:relative; 
+	width:100%; 
 }
 
-/*used*/
-.error {
-	padding: 10px 0px 10px 0px;
+#main { 
+	width: 960px; 
+	margin: 0 auto; 
+	background: #fff; 
+	border: 1px solid #ccc; 
 }
 
-/*used*/
-#picture {
+/* #header-image formats the large crowd picture at the top of the home page  */
+
+#header-picture {
 	background-image: url(http://s3-us-west-2.amazonaws.com/sentimyzer/crowd_pic.jpg);
 	height: 640px;
 }
 
-/*used*/
-.navbar { 
+/* navbar is fixed to the top of the page and given a minimum height */
+
+#navbar { 
 	width: 100%; 
 	min-height: 50px; 
 	display: block; 
@@ -50,22 +35,58 @@ body{
 	border: 1px solid #ccc;
 	position: fixed;
 	z-index: 9999;
-	 }
+}
 
-/*used*/
+/* .section is used by the jquery scrolling script to designate each section the scroller should scroll to */
+
+.section { 
+	padding: 0px; 
+}
+
+/* #errors formats the flash errors and messages at the top of the page */
+
+#errors {
+	width: 920px;
+	height: auto;
+	background-color: #ff1a29;
+	vertical-align: center;
+	padding: 0px 20px;
+	text-align: left;
+	font-family: 'Roboto', Arial;
+	font-size: 14px;
+	font-weight: 500;
+	color: #EEE;
+	text-transform: uppercase;
+}
+
+/* each flash error */
+.error {
+	padding: 10px 0px 10px 0px;
+}
+
+/* creates padding in layout */
 .headerspace {
 	height: 60px;
 }
 
-/*used*/
+/*used, edited */
 .datasources {
 	text-align: center;
 }
 
-/*used*/
+/*used, edited */
 .datasources img {
 	margin: 30px;
 	vertical-align: middle;
+	height: 35px;
+}
+
+/* used, edited */
+.line-separator {
+	height:1px;
+	width: 200px;
+	background:#ff1a29;
+	margin: 20px auto;
 }
 
 /*used*/
@@ -202,14 +223,6 @@ p {
 a {
 	text-decoration: none;
 	color: inherit;
-}
-
-/*used*/
-.line-separator {
-	height:1px;
-	width: 200px;
-	background:#ff1a29;
-	margin: 20px auto;
 }
 
 /*used*/
