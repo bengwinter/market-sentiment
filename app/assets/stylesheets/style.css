@@ -1,3 +1,5 @@
+/*add backup fonts to all text classes, reduce number of text classes substantially. let's get this down to < 100 lines of css code */
+
 body{ 
 	margin: 0; 
 	background-image: url('http://s3-us-west-2.amazonaws.com/sentimyzer/noisy_grid.png');

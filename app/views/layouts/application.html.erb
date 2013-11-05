@@ -13,13 +13,22 @@
   <script type="text/javascript" src="http://s3-us-west-2.amazonaws.com/sentimyzer/jquery.pagescroller.js"></script>
   <script type="text/javascript">
     $(document).ready(function(){
-    $('#wrapper').pageScroller({
-      navigation: '.pageScrollerNav'
+      $('#wrapper').pageScroller({
+        navigation: '.pageScrollerNav'
+      });
     });
-  });
   </script>
 </head>
 <body>
-  <%= yield %>
+  <%= render 'layouts/navbar' %>
+  <div id="wrapper"> <!-- used for page scrolling plugin -->
+    <div id="main"> <!-- also used for page scrolling -->
+      <div class="headerspace"></div>
+      <%= yield %>
+      <div class="headerspace"></div>
+      <div class="headerspace"></div>
+    </div> <!-- end main div -->
+    <%= render 'layouts/footer' %>
+  </div> <!-- end wrapper div -->
 </body>
 </html>
